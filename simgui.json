@@ -1,0 +1,11 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Driver Readout/Autonomous Mode": "String Chooser",
+      "/Shuffleboard/Driver Readout/Loading Station Bay": "String Chooser",
+      "/Shuffleboard/Driver Readout/Zero Gyroscope": "Command"
+    }
+  }
+}
