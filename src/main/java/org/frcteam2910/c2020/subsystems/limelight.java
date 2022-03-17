@@ -10,6 +10,10 @@ public class Limelight {
 
   public double targetHeight = 104;
 
+  public double Kp = -0.1;
+
+  public double minCommand = 0.05;
+
   public Limelight() {
     mLime = NetworkTableInstance.getDefault().getTable("limelight");
   }
@@ -26,9 +30,21 @@ public class Limelight {
     return mLime.getEntry("ty").getDouble(0);
   }
 
+  public double adjustHeading() {
+    double steeringAdjust = 0.0;
+    double headingError = -getHorzontalOffset();
+
+    if (getHorzontalOffset() > 1.0) {
+      steeringAdjust = Kp * headingError - minCommand;
+    } else if (getHorzontalOffset() < 1.0) {
+      steeringAdjust = Kp * headingError + minCommand;
+    }
+    return steeringAdjust;
+  }
+
   public double getDistanceFromTarget() {
-    double verticalOffset = getVerticalOffset() * (Math.PI/ 180.0);
-    
-    return (targetHeight-limelightHeight)/Math.tan(verticalOffset);
+    double verticalOffset = getVerticalOffset() * (Math.PI / 180.0);
+
+    return (targetHeight - limelightHeight) / Math.tan(verticalOffset);
   }
 }
