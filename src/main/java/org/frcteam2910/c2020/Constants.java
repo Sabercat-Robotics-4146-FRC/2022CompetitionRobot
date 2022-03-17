@@ -31,7 +31,15 @@ public class Constants {
 
     public static final double BOTTOM_FLYWHEEL_GEAR_RATIO = 1.5;
 
-    public static final int INTAKE_MOTOR_PORT = 2;
+    public static final int intakeMotor = 41;
+
+    public static final int indexerBottom = 21;
+    public static final int indexerTop = 22;
+
+    public static final int indexerBottomSensor = 1;
+    public static final int indexerTopSensor = 2;
+
+    
 
     public static final int FLYWHEEL_PRIMARY_MOTOR_PORT = 11;
     public static final int FLYWHEEL_SECONDARY_MOTOR_PORT = 13;

@@ -22,6 +22,7 @@ public class RobotContainer {
     private final Superstructure superstructure = new Superstructure();
 
     private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+    private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
 
     private AutonomousTrajectories autonomousTrajectories;
     private final AutonomousChooser autonomousChooser;
@@ -40,6 +41,7 @@ public class RobotContainer {
         primaryController.getRightXAxis().setInverted(true);
 
         CommandScheduler.getInstance().registerSubsystem(drivetrainSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
 
         CommandScheduler.getInstance().setDefaultCommand(drivetrainSubsystem, new DriveCommand(drivetrainSubsystem, getDriveForwardAxis(), getDriveStrafeAxis(), getDriveRotationAxis()));
 
@@ -56,6 +58,23 @@ public class RobotContainer {
         primaryController.getAButton().whenPressed(
                 new BasicDriveCommand(drivetrainSubsystem, new Vector2(-0.5, 0.0), 0.0, false).withTimeout(0.3)
         );
+
+        primaryController.getBButton().whenPressed(
+            () -> intakeAndIndexer.loadTopBall()
+        );
+
+        primaryController.getAButton().whenPressed(
+            () -> intakeAndIndexer.toggleIntake()
+        );
+
+        primaryController.getRightJoystickButton().whenPressed(
+            () -> intakeAndIndexer.extendIntakeSubsystem()
+        );
+
+    // new Button(m_controller::getBButton).whenReleased(m_IntakeAndIndexer::indexerAlwaysOn);
+    // new Button(m_controller::getAButton).whenPressed(m_IntakeAndIndexer::toggleIntake);
+    // new Button(m_controller::getRightStickButton)
+    //     .whenPressed(m_IntakeAndIndexer::extendIntakeSubsystem);
 
     }
 
