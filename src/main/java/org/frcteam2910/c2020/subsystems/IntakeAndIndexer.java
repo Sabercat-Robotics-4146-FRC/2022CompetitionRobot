@@ -41,6 +41,8 @@ public class IntakeAndIndexer implements Subsystem {
 
   private boolean flywheelToggle;
 
+  private boolean indexerToggle;
+
   public IntakeAndIndexer() {
     indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
     indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
@@ -92,14 +94,16 @@ public class IntakeAndIndexer implements Subsystem {
     SmartDashboard.putNumber("Min Output", kMinOutput);
 
     flywheelToggle = false;
+
+    indexerToggle = false;
   }
 
   public void indexerAlwaysOn() {
     if (indexerTopSensor.get() == true) {
-      indexerBottom.set(.1);
-      indexerTop.set(.1);
+      indexerBottom.setVoltage(3);
+      indexerTop.setVoltage(2.5);
     } else if (indexerTopSensor.get() == false && indexerBottomSensor.get() == true) {
-      indexerBottom.set(.1);
+      indexerBottom.setVoltage(2.5);
       indexerTop.set(0.0);
     } else {
       indexerBottom.set(0.0);
@@ -107,9 +111,14 @@ public class IntakeAndIndexer implements Subsystem {
     }
   }
 
+  public void indexerOff() {
+    indexerBottom.stopMotor();
+    indexerTop.stopMotor();
+  }
+
   public void loadTopBall() {
     indexerBottom.stopMotor();
-    indexerTop.set(.1);
+    indexerTop.setVoltage(3);
   }
 
   public void toggleIntake() {
@@ -134,9 +143,19 @@ public class IntakeAndIndexer implements Subsystem {
     }
   }
 
+  public void toggleIndexer() {
+    indexerToggle = !indexerToggle;
+  }
+
   @Override
   public void periodic() {
     intakePiston.set(intakePistonExtended);
+
+    if (indexerToggle) {
+      indexerAlwaysOn();
+    } else {
+      indexerOff();
+    }
 
     // indexerAlwaysOn();
 

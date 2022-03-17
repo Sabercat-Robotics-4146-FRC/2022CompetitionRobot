@@ -52,6 +52,8 @@ public class Constants {
 
   public static final int PRIMARY_CONTROLLER_PORT = 0;
 
+  public static final int secondaryControllerPort = 1;
+
   public static final int PIGEON_PORT = 16;
 
   public static final int PRESSURE_SENSOR_PORT = 0;
