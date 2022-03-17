@@ -63,7 +63,7 @@ public class AutonomousTrajectories {
     slowConstraints[slowConstraints.length - 2] =
         new MaxAccelerationConstraint(4.0 * 12.0); // change this to lower acceleration
 
-    straightBackAndShoot = 
+    straightBackAndShoot =
         new Trajectory(
             new SimplePathBuilder(Vector2.ZERO, Rotation2.ZERO)
                 .lineTo(new Vector2(2.5, 0), Rotation2.ZERO)
@@ -71,7 +71,7 @@ public class AutonomousTrajectories {
                 .build(),
             trajectoryConstraints,
             SAMPLE_DISTANCE);
-    
+
     eightBallAutoPartOne =
         new Trajectory(
             new SimplePathBuilder(new Vector2(509.0, -155.0), Rotation2.ZERO)
@@ -223,6 +223,6 @@ public class AutonomousTrajectories {
   }
 
   public Trajectory getStraightBackAndShoot() {
-      return straightBackAndShoot;
+    return straightBackAndShoot;
   }
 }

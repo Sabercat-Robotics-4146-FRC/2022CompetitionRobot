@@ -9,7 +9,6 @@ import org.frcteam2910.c2020.util.AutonomousChooser;
 import org.frcteam2910.c2020.util.AutonomousTrajectories;
 import org.frcteam2910.c2020.util.DriverReadout;
 import org.frcteam2910.common.math.Rotation2;
-import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.input.Axis;
 import org.frcteam2910.common.robot.input.DPadButton.Direction;
 import org.frcteam2910.common.robot.input.XboxController;
@@ -25,7 +24,7 @@ public class RobotContainer {
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
   private final EndLift endLift = new EndLift();
   private final CompressorClass compressorClass = new CompressorClass();
-  private final Limelight limelight = new Limelight();
+  // private final Limelight limelight = new Limelight();
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
@@ -48,6 +47,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
     CommandScheduler.getInstance().registerSubsystem(endLift);
     CommandScheduler.getInstance().registerSubsystem(compressorClass);
+    // CommandScheduler.getInstance().registerSubsystem(limelight);
 
     // CommandScheduler.getInstance()
     //     .setDefaultCommand(
@@ -73,13 +73,13 @@ public class RobotContainer {
     // false).withTimeout(0.3)
     // );
 
-    primaryController
-        .getDPadButton(Direction.UP)
-        .whileHeld(
-            new BasicDriveCommand(
-                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
+    // primaryController
+    //     .getDPadButton(Direction.UP)
+    //     .whileHeld(
+    //         new BasicDriveCommand(
+    //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    // primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
@@ -106,6 +106,12 @@ public class RobotContainer {
     // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
 
     primaryController.getLeftJoystickButton().whenPressed(() -> endLift.togglePin());
+
+    // primaryController.getDPadButton(Direction.LEFT).whenPressed(() -> limelight.turnOff());
+
+    primaryController
+        .getDPadButton(Direction.DOWN)
+        .whenPressed(() -> intakeAndIndexer.toggleFlywheel());
   }
 
   public Command getAutonomousCommand() {
@@ -127,6 +133,10 @@ public class RobotContainer {
 
   public DrivetrainSubsystem getDrivetrainSubsystem() {
     return drivetrainSubsystem;
+  }
+
+  public IntakeAndIndexer getIntakeAndIndexerSubsystem() {
+    return intakeAndIndexer;
   }
 
   public Superstructure getSuperstructure() {

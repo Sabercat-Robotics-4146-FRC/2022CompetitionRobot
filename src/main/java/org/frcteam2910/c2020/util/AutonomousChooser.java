@@ -117,7 +117,7 @@ public class AutonomousChooser {
     return command;
   }
 
-  public Command getStraightBackShootCommand(RobotContainer container){
+  public Command getStraightBackShootCommand(RobotContainer container) {
     SequentialCommandGroup command = new SequentialCommandGroup();
 
     resetRobotPose(command, container, trajectories.getStraightBackAndShoot());
@@ -151,8 +151,7 @@ public class AutonomousChooser {
   }
 
   private void shootAtTarget(SequentialCommandGroup command, RobotContainer container) {
-    command.addCommands(
-      new ShootBallCommand(container.getIntakeAndIndexerSubsystem()));
+    command.addCommands(new ShootBallCommand(container.getIntakeAndIndexerSubsystem()));
   }
 
   private void follow(

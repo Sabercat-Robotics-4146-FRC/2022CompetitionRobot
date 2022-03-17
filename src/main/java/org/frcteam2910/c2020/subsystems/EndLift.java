@@ -30,7 +30,7 @@ public class EndLift implements Subsystem {
   }
 
   public void reverseSpool() {
-    liftMotorLeader.set(.2);
+    liftMotorLeader.set(.07);
   }
 
   public void SendSpool() {

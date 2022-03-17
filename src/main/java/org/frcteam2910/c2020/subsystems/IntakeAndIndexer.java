@@ -34,7 +34,7 @@ public class IntakeAndIndexer implements Subsystem {
 
   public Solenoid intakePiston;
 
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint;
 
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder m_encoder;
@@ -60,20 +60,21 @@ public class IntakeAndIndexer implements Subsystem {
     flywheelfollower.restoreFactoryDefaults();
 
     flywheelLeader.setInverted(true);
-    flywheelfollower.follow(flywheelLeader);
+    flywheelfollower.follow(flywheelLeader, true);
 
     m_pidController = flywheelLeader.getPIDController();
 
     m_encoder = flywheelLeader.getEncoder();
 
-    kP = 6e-5;
+    kP = 6e-3;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = 0.000015;
+    kFF = 0.0103734439834;
     kMaxOutput = 1;
     kMinOutput = -1;
     maxRPM = 5874;
+    setPoint = 500;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
@@ -125,13 +126,12 @@ public class IntakeAndIndexer implements Subsystem {
   }
 
   public void toggleFlywheel() {
+    flywheelToggle = !flywheelToggle;
     if (flywheelToggle == false) {
       flywheelLeader.stopMotor();
     } else {
-      m_pidController.setReference(5000, ControlType.kVelocity);
+      m_pidController.setReference(500, ControlType.kVelocity);
     }
-
-    flywheelToggle = !flywheelToggle;
   }
 
   @Override
