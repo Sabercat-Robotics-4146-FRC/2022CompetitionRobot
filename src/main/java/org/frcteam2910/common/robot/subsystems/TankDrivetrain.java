@@ -4,42 +4,43 @@ import org.frcteam2910.common.math.Vector2;
 
 @Deprecated
 public abstract class TankDrivetrain extends Drivetrain {
-    private final double trackWidth;
+  private final double trackWidth;
 
-    public TankDrivetrain(double trackWidth) {
-        this.trackWidth = trackWidth;
-    }
+  public TankDrivetrain(double trackWidth) {
+    this.trackWidth = trackWidth;
+  }
 
-    public final double getTrackWidth() {
-        return trackWidth;
-    }
+  public final double getTrackWidth() {
+    return trackWidth;
+  }
 
-    public abstract double getLeftDistance();
-    public abstract double getRightDistance();
+  public abstract double getLeftDistance();
 
-    public void arcadeDrive(double forward, double turn) {
-        tankDrive(forward + turn, forward - turn);
-    }
+  public abstract double getRightDistance();
 
-    public abstract void tankDrive(double left, double right);
+  public void arcadeDrive(double forward, double turn) {
+    tankDrive(forward + turn, forward - turn);
+  }
 
-    @Override
-    public synchronized void updateKinematics(double timestamp) {
-        // TODO: Tank drive kinematics
-    }
+  public abstract void tankDrive(double left, double right);
 
-    @Override
-    public Vector2 getKinematicPosition() {
-        return Vector2.ZERO; // TODO: Tank drive kinematics
-    }
+  @Override
+  public synchronized void updateKinematics(double timestamp) {
+    // TODO: Tank drive kinematics
+  }
 
-    @Override
-    public Vector2 getKinematicVelocity() {
-        return Vector2.ZERO; // TODO: Tank drive kinematics
-    }
+  @Override
+  public Vector2 getKinematicPosition() {
+    return Vector2.ZERO; // TODO: Tank drive kinematics
+  }
 
-    @Override
-    public void stop() {
-        tankDrive(0, 0);
-    }
+  @Override
+  public Vector2 getKinematicVelocity() {
+    return Vector2.ZERO; // TODO: Tank drive kinematics
+  }
+
+  @Override
+  public void stop() {
+    tankDrive(0, 0);
+  }
 }

@@ -6,27 +6,28 @@ import org.frcteam2910.common.math.Vector2;
 
 @Deprecated
 public abstract class Drivetrain extends Subsystem {
-	public abstract Gyroscope getGyroscope();
-	
-	public abstract double getMaximumVelocity();
-	public abstract double getMaximumAcceleration();
+  public abstract Gyroscope getGyroscope();
 
-	@Override
-	public abstract void updateKinematics(double timestamp);
+  public abstract double getMaximumVelocity();
 
-	public abstract Vector2 getKinematicPosition();
+  public abstract double getMaximumAcceleration();
 
-	public abstract Vector2 getKinematicVelocity();
+  @Override
+  public abstract void updateKinematics(double timestamp);
 
-	@Override
-	public void outputToSmartDashboard() {
-		SmartDashboard.putString("Drivetrain position", getKinematicPosition().toString());
-		SmartDashboard.putNumber("Drivetrain X velocity", getKinematicVelocity().x);
-		SmartDashboard.putNumber("Drivetrain Y velocity", getKinematicVelocity().y);
+  public abstract Vector2 getKinematicPosition();
 
-		SmartDashboard.putNumber("Drivetrain angle", getGyroscope().getAngle().toDegrees());
-	}
+  public abstract Vector2 getKinematicVelocity();
 
-	@Override
-	public void zeroSensors() {}
+  @Override
+  public void outputToSmartDashboard() {
+    SmartDashboard.putString("Drivetrain position", getKinematicPosition().toString());
+    SmartDashboard.putNumber("Drivetrain X velocity", getKinematicVelocity().x);
+    SmartDashboard.putNumber("Drivetrain Y velocity", getKinematicVelocity().y);
+
+    SmartDashboard.putNumber("Drivetrain angle", getGyroscope().getAngle().toDegrees());
+  }
+
+  @Override
+  public void zeroSensors() {}
 }

@@ -15,7 +15,8 @@
 //     /**
 //      * The default drive encoder rotations per unit.
 //      */
-//     public static final double DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * Math.PI)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
+//     public static final double DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * Math.PI)) * (60.0
+// / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
 
 //     private static final PidConstants ANGLE_CONSTANTS = new PidConstants(0.5, 0.0, 0.0001);
 
@@ -65,7 +66,8 @@
 //     private PidController angleController = new PidController(ANGLE_CONSTANTS);
 
 //     /**
-//      * @param modulePosition The module's offset from the center of the robot's center of rotation
+//      * @param modulePosition The module's offset from the center of the robot's center of
+// rotation
 //      * @param angleOffset    An angle in radians that is used to offset the angle encoder
 //      * @param angleMotor     The motor that controls the module's angle
 //      * @param driveMotor     The motor that drives the module's wheel
@@ -91,7 +93,8 @@
 
 //     @Override
 //     protected double readAngle() {
-//         double angle = (1.0 - angleEncoder.getVoltage() / RobotController.getVoltage5V()) * 2.0 * Math.PI + angleOffset;
+//         double angle = (1.0 - angleEncoder.getVoltage() / RobotController.getVoltage5V()) * 2.0 *
+// Math.PI + angleOffset;
 //         angle %= 2.0 * Math.PI;
 //         if (angle < 0.0) {
 //             angle += 2.0 * Math.PI;

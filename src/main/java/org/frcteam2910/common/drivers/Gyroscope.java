@@ -3,47 +3,48 @@ package org.frcteam2910.common.drivers;
 import org.frcteam2910.common.math.Rotation2;
 
 public abstract class Gyroscope {
-	private Rotation2 adjustmentAngle = Rotation2.ZERO;
-	private boolean inverted;
+  private Rotation2 adjustmentAngle = Rotation2.ZERO;
+  private boolean inverted;
 
-	public abstract void calibrate();
+  public abstract void calibrate();
 
-	public final Rotation2 getAdjustmentAngle() {
-		return adjustmentAngle;
-	}
+  public final Rotation2 getAdjustmentAngle() {
+    return adjustmentAngle;
+  }
 
-	public void setAdjustmentAngle(Rotation2 adjustmentAngle) {
-		this.adjustmentAngle = adjustmentAngle;
-	}
+  public void setAdjustmentAngle(Rotation2 adjustmentAngle) {
+    this.adjustmentAngle = adjustmentAngle;
+  }
 
-	public final boolean isInverted() {
-		return inverted;
-	}
+  public final boolean isInverted() {
+    return inverted;
+  }
 
-	public final void setInverted(boolean inverted) {
-		this.inverted = inverted;
-	}
+  public final void setInverted(boolean inverted) {
+    this.inverted = inverted;
+  }
 
-	public abstract Rotation2 getUnadjustedAngle();
-	public abstract double getUnadjustedRate();
+  public abstract Rotation2 getUnadjustedAngle();
 
-	public final Rotation2 getAngle() {
-		Rotation2 angle = getUnadjustedAngle().rotateBy(adjustmentAngle.inverse());
+  public abstract double getUnadjustedRate();
 
-		if (inverted) {
-			return angle.inverse();
-		}
+  public final Rotation2 getAngle() {
+    Rotation2 angle = getUnadjustedAngle().rotateBy(adjustmentAngle.inverse());
 
-		return angle;
-	}
+    if (inverted) {
+      return angle.inverse();
+    }
 
-	public final double getRate() {
-		double rate = getUnadjustedRate();
+    return angle;
+  }
 
-		if (inverted) {
-			return -rate;
-		}
+  public final double getRate() {
+    double rate = getUnadjustedRate();
 
-		return rate;
-	}
+    if (inverted) {
+      return -rate;
+    }
+
+    return rate;
+  }
 }
