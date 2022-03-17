@@ -9,9 +9,9 @@ public class DriveCommand extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
   private Axis forward;
   private Axis strafe;
-  private Axis rotation;
+  private double rotation;
 
-  public DriveCommand(DrivetrainSubsystem drivetrain, Axis forward, Axis strafe, Axis rotation) {
+  public DriveCommand(DrivetrainSubsystem drivetrain, Axis forward, Axis strafe, double rotation) {
     this.forward = forward;
     this.strafe = strafe;
     this.rotation = rotation;
@@ -23,8 +23,7 @@ public class DriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    drivetrainSubsystem.drive(
-        new Vector2(forward.get(true), strafe.get(true)), rotation.get(true), true);
+    drivetrainSubsystem.drive(new Vector2(forward.get(true), strafe.get(true)), rotation, true);
   }
 
   @Override

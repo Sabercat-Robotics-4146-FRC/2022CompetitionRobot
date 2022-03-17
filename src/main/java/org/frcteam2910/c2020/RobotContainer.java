@@ -21,6 +21,8 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
+  private final EndLift endLift = new EndLift();
+  private final CompressorClass compressorClass = new CompressorClass();
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
@@ -41,10 +43,17 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().registerSubsystem(drivetrainSubsystem);
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
+    CommandScheduler.getInstance().registerSubsystem(endLift);
+    CommandScheduler.getInstance().registerSubsystem(compressorClass);
 
-    // CommandScheduler.getInstance().setDefaultCommand(drivetrainSubsystem, new
-    // DriveCommand(drivetrainSubsystem, getDriveForwardAxis(), getDriveStrafeAxis(),
-    // getDriveRotationAxis()));
+    // CommandScheduler.getInstance()
+    //     .setDefaultCommand(
+    //         drivetrainSubsystem,
+    //         new DriveCommand(
+    //             drivetrainSubsystem,
+    //             getDriveForwardAxis(),
+    //             getDriveStrafeAxis(),
+    //             getDriveRotationAxis()));
 
     driverReadout = new DriverReadout(this);
 
@@ -63,17 +72,31 @@ public class RobotContainer {
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
+    primaryController.getBButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
+
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
     primaryController
         .getRightJoystickButton()
         .whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
 
-    // new Button(m_controller::getBButton).whenReleased(m_IntakeAndIndexer::indexerAlwaysOn);
-    // new Button(m_controller::getAButton).whenPressed(m_IntakeAndIndexer::toggleIntake);
-    // new Button(m_controller::getRightStickButton)
-    //     .whenPressed(m_IntakeAndIndexer::extendIntakeSubsystem);
+    primaryController.getStartButton().whileHeld(() -> endLift.reverseSpool());
 
+    // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
+
+    primaryController.getStartButton().whenReleased(() -> endLift.stopLift());
+
+    // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
+
+    primaryController.getXButton().whileHeld(() -> endLift.SendSpool());
+
+    // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
+
+    primaryController.getXButton().whenReleased(() -> endLift.stopLift());
+
+    // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
+
+    primaryController.getLeftJoystickButton().whenPressed(() -> endLift.togglePin());
   }
 
   public Command getAutonomousCommand() {
@@ -88,8 +111,9 @@ public class RobotContainer {
     return primaryController.getLeftXAxis();
   }
 
-  private Axis getDriveRotationAxis() {
-    return primaryController.getRightXAxis();
+  private double getDriveRotationAxis() {
+    return primaryController.getRightTriggerAxis().get()
+        - primaryController.getLeftTriggerAxis().get();
   }
 
   public DrivetrainSubsystem getDrivetrainSubsystem() {

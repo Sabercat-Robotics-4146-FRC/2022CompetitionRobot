@@ -45,24 +45,12 @@ public class Constants {
   public static final int endLiftRight = 52;
   public static final int endLiftLeft = 51;
 
-  public static final int FLYWHEEL_PRIMARY_MOTOR_PORT = 11;
-  public static final int FLYWHEEL_SECONDARY_MOTOR_PORT = 13;
-  public static final int FLYWHEEL_TERTIARY_MOTOR_PORT = 12;
+  public static final int flywheelLeader = 31;
+  public static final int flywheelfollower = 32;
 
-  public static final int BOTTOM_INTAKE_EXTENSION_SOLENOID = 0;
-  public static final int TOP_INTAKE_EXTENSION_SOLENOID = 1;
+  public static final int liftPin = 0;
 
   public static final int PRIMARY_CONTROLLER_PORT = 0;
 
-  public static final int FEEDER_MOTOR_PORT = 18;
-
-  public static final int FEEDER_IS_FULL_SENSOR_PORT = 2;
-  public static final int FEEDER_INTAKE_BALL_SENSOR_PORT = 1;
-
-  public static final int CLIMBER_LOCK_SOLENOID_PORT = 2;
-  public static final int CLIMBER_MOTOR_PORT = 6;
-
   public static final int PIGEON_PORT = 16;
-
-  public static final int PRESSURE_SENSOR_PORT = 0;
 }
