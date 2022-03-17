@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frcteam2910.c2020.RobotContainer;
 import org.frcteam2910.c2020.commands.FollowTrajectoryCommand;
+import org.frcteam2910.c2020.commands.ShootBallCommand;
 import org.frcteam2910.common.control.Trajectory;
 import org.frcteam2910.common.math.RigidTransform2;
 import org.frcteam2910.common.math.Rotation2;
@@ -22,6 +23,7 @@ public class AutonomousChooser {
     autonomousModeChooser.addOption("6 Ball Compatible", AutonomousMode.EIGHT_BALL_COMPATIBLE);
     autonomousModeChooser.addOption("Simple Shoot Three", AutonomousMode.SIMPLE_SHOOT_THREE);
     autonomousModeChooser.addOption("Straight Line", AutonomousMode.STRAIGHT_LINE);
+    autonomousModeChooser.addOption("Sraight Back and Shoot", AutonomousMode.STRAIGHT_BACK_SHOOT);
   }
 
   public SendableChooser<AutonomousMode> getAutonomousModeChooser() {
@@ -115,6 +117,18 @@ public class AutonomousChooser {
     return command;
   }
 
+  public Command getStraightBackShootCommand(RobotContainer container){
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    resetRobotPose(command, container, trajectories.getStraightBackAndShoot());
+
+    follow(command, container, trajectories.getStraightBackAndShoot());
+
+    shootAtTarget(command, container);
+
+    return command;
+  }
+
   public Command getCommand(RobotContainer container) {
     switch (autonomousModeChooser.getSelected()) {
       case EIGHT_BALL:
@@ -129,17 +143,17 @@ public class AutonomousChooser {
         return getSimpleShootThreeAutoCommand(container);
       case STRAIGHT_LINE:
         return getStraightAutoCommand(container);
+      case STRAIGHT_BACK_SHOOT:
+        return getStraightBackShootCommand(container);
     }
 
     return get10BallAutoCommand(container);
   }
 
   private void shootAtTarget(SequentialCommandGroup command, RobotContainer container) {
-    shootAtTarget(command, container, 2.5);
+    command.addCommands(
+      new ShootBallCommand(container.getIntakeAndIndexerSubsystem()));
   }
-
-  private void shootAtTarget(
-      SequentialCommandGroup command, RobotContainer container, double timeToWait) {}
 
   private void follow(
       SequentialCommandGroup command, RobotContainer container, Trajectory trajectory) {
@@ -175,6 +189,7 @@ public class AutonomousChooser {
     TEN_BALL,
     TEN_BALL_CIRCUIT,
     SIMPLE_SHOOT_THREE,
-    STRAIGHT_LINE
+    STRAIGHT_LINE,
+    STRAIGHT_BACK_SHOOT
   }
 }
