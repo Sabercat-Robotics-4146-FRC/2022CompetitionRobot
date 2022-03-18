@@ -66,8 +66,7 @@ public class AutonomousTrajectories {
     straightBackAndShoot =
         new Trajectory(
             new SimplePathBuilder(Vector2.ZERO, Rotation2.ZERO)
-                .lineTo(new Vector2(2.5, 0), Rotation2.ZERO)
-                .lineTo(new Vector2(2.5, -5.0), Rotation2.ZERO)
+                .lineTo(new Vector2(-5, 0), Rotation2.ZERO)
                 .build(),
             trajectoryConstraints,
             SAMPLE_DISTANCE);
