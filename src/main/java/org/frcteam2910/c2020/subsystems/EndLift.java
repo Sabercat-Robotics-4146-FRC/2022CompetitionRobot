@@ -22,7 +22,7 @@ public class EndLift implements Subsystem {
     liftMotorFollower = new CANSparkMax(Constants.endLiftRight, MotorType.kBrushless);
 
     liftMotorLeader.setInverted(true);
-    liftMotorFollower.follow(liftMotorLeader, false);
+    liftMotorFollower.follow(liftMotorLeader, true);
 
     liftPin = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.liftPin);
 
@@ -30,11 +30,11 @@ public class EndLift implements Subsystem {
   }
 
   public void reverseSpool() {
-    liftMotorLeader.set(.07);
+    liftMotorLeader.setVoltage(-1.5);
   }
 
   public void SendSpool() {
-    liftMotorLeader.setVoltage(-10);
+    liftMotorLeader.setVoltage(12);
   }
 
   public void stopLift() {

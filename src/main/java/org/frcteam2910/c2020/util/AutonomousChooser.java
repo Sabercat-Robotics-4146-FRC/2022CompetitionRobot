@@ -67,12 +67,6 @@ public class AutonomousChooser {
         new FollowTrajectoryCommand(container.getDrivetrainSubsystem(), trajectory));
   }
 
-  private void followAndIntake(
-      SequentialCommandGroup command, RobotContainer container, Trajectory trajectory) {
-    command.addCommands(
-        new FollowTrajectoryCommand(container.getDrivetrainSubsystem(), trajectory));
-  }
-
   private void resetRobotPose(
       SequentialCommandGroup command, RobotContainer container, Trajectory trajectory) {
     command.addCommands(
@@ -90,11 +84,6 @@ public class AutonomousChooser {
   }
 
   private enum AutonomousMode {
-    EIGHT_BALL,
-    EIGHT_BALL_COMPATIBLE,
-    TEN_BALL,
-    TEN_BALL_CIRCUIT,
-    SIMPLE_SHOOT_THREE,
     STRAIGHT_LINE,
     STRAIGHT_BACK_SHOOT
   }

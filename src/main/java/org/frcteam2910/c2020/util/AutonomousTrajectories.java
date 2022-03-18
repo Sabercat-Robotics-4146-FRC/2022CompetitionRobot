@@ -18,9 +18,9 @@ public class AutonomousTrajectories {
     TrajectoryConstraint[] slowConstraints =
         Arrays.copyOf(trajectoryConstraints, trajectoryConstraints.length + 1);
     slowConstraints[slowConstraints.length - 1] =
-        new MaxVelocityConstraint(6.0 * 12.0); // change this to lower speed
+        new MaxVelocityConstraint(2.0 * 4.0); // change this to lower speed
     slowConstraints[slowConstraints.length - 2] =
-        new MaxAccelerationConstraint(4.0 * 12.0); // change this to lower acceleration
+        new MaxAccelerationConstraint(2.0 * 2.0); // change this to lower acceleration
 
     straightBackAndShoot =
         new Trajectory(
@@ -33,9 +33,9 @@ public class AutonomousTrajectories {
     straightAutoPartOne =
         new Trajectory(
             new SimplePathBuilder(Vector2.ZERO, Rotation2.ZERO)
-                .lineTo(new Vector2(-5, 0), Rotation2.ZERO)
+                .lineTo(new Vector2(-3, 0), Rotation2.ZERO)
                 .build(),
-            trajectoryConstraints,
+            slowConstraints,
             SAMPLE_DISTANCE);
   }
 

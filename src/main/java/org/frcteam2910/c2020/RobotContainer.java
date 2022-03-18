@@ -83,25 +83,25 @@ public class RobotContainer {
 
     secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    // secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
+    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
     primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
 
-    // secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
+    secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
 
     // // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
 
-    // secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
+    secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
 
     // // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
 
-    // secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
+    secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
 
     // // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
 
-    // secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
+    secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
 
     // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
 
