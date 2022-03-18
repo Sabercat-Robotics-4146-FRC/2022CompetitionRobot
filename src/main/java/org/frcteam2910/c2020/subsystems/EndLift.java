@@ -34,7 +34,7 @@ public class EndLift implements Subsystem {
   }
 
   public void SendSpool() {
-    liftMotorLeader.set(-.2);
+    liftMotorLeader.setVoltage(-10);
   }
 
   public void stopLift() {

@@ -10,6 +10,7 @@ import org.frcteam2910.c2020.util.AutonomousTrajectories;
 import org.frcteam2910.c2020.util.DriverReadout;
 import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.robot.input.Axis;
+import org.frcteam2910.common.robot.input.DPadButton.Direction;
 import org.frcteam2910.common.robot.input.XboxController;
 
 public class RobotContainer {
@@ -26,7 +27,7 @@ public class RobotContainer {
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
   private final EndLift endLift = new EndLift();
   private final CompressorClass compressorClass = new CompressorClass();
-  // private final Limelight limelight = new Limelight();
+  private final Limelight limelight = new Limelight();
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
@@ -49,16 +50,16 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
     CommandScheduler.getInstance().registerSubsystem(endLift);
     CommandScheduler.getInstance().registerSubsystem(compressorClass);
-    // CommandScheduler.getInstance().registerSubsystem(limelight);
+    CommandScheduler.getInstance().registerSubsystem(limelight);
 
-    // CommandScheduler.getInstance()
-    //     .setDefaultCommand(
-    //         drivetrainSubsystem,
-    //         new DriveCommand(
-    //             drivetrainSubsystem,
-    //             getDriveForwardAxis(),
-    //             getDriveStrafeAxis(),
-    //             getDriveRotationAxis()));
+    CommandScheduler.getInstance()
+        .setDefaultCommand(
+            drivetrainSubsystem,
+            new DriveCommand(
+                drivetrainSubsystem,
+                getDriveForwardAxis(),
+                getDriveStrafeAxis(),
+                getDriveRotationAxis()));
 
     driverReadout = new DriverReadout(this);
 
@@ -76,12 +77,12 @@ public class RobotContainer {
     // );
 
     // primaryController
-    //     .getRightStickButton()
+    //     .getRightJoystickButton()
     //     .whileHeld(
     //         new BasicDriveCommand(
     //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    // primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    // secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
     secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
@@ -107,9 +108,11 @@ public class RobotContainer {
 
     secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
 
-    // primaryController.getDPadButton(Direction.LEFT).whenPressed(() -> limelight.turnOff());
+    primaryController.getDPadButton(Direction.LEFT).whenPressed(() -> limelight.turnOff());
 
     secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
+
+    secondaryController.getBackButton().whenPressed(() -> intakeAndIndexer.indexerOff());
   }
 
   public Command getAutonomousCommand() {
@@ -124,9 +127,8 @@ public class RobotContainer {
     return primaryController.getLeftXAxis();
   }
 
-  private double getDriveRotationAxis() {
-    return primaryController.getRightTriggerAxis().get()
-        - primaryController.getLeftTriggerAxis().get();
+  private Axis getDriveRotationAxis() {
+    return primaryController.getRightXAxis();
   }
 
   public DrivetrainSubsystem getDrivetrainSubsystem() {

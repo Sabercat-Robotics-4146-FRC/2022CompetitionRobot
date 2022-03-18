@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -43,7 +44,12 @@ public class IntakeAndIndexer implements Subsystem {
 
   private boolean indexerToggle;
 
+  private Servo servoLeft;
+  private Servo servoRight;
+  private double kHood;
+
   public IntakeAndIndexer() {
+    kHood = .40;
     indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
     indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
     indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
@@ -68,11 +74,23 @@ public class IntakeAndIndexer implements Subsystem {
 
     m_encoder = flywheelLeader.getEncoder();
 
-    kP = 6e-3;
+    servoLeft = new Servo(0);
+    servoRight = new Servo(1);
+
+    servoRight.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
+    servoRight.setSpeed(1.0); // to open
+    servoRight.setSpeed(-1.0); // to close
+    servoRight.set(kHood);
+    servoLeft.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
+    servoLeft.setSpeed(1.0); // to open
+    servoLeft.setSpeed(-1.0); // to close
+    servoLeft.set(kHood);
+
+    kP = 45e-5;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = 0.0103734439834;
+    kFF = .0002;
     kMaxOutput = 1;
     kMinOutput = -1;
     maxRPM = 5874;
@@ -104,10 +122,11 @@ public class IntakeAndIndexer implements Subsystem {
       indexerTop.setVoltage(2.5);
     } else if (indexerTopSensor.get() == false && indexerBottomSensor.get() == true) {
       indexerBottom.setVoltage(2.5);
-      indexerTop.set(0.0);
+      indexerTop.stopMotor();
+      ;
     } else {
-      indexerBottom.set(0.0);
-      indexerTop.set(0.0);
+      indexerBottom.stopMotor();
+      indexerTop.stopMotor();
     }
   }
 
@@ -118,7 +137,7 @@ public class IntakeAndIndexer implements Subsystem {
 
   public void loadTopBall() {
     indexerBottom.stopMotor();
-    indexerTop.setVoltage(3);
+    indexerTop.setVoltage(6);
   }
 
   public void toggleIntake() {
@@ -139,7 +158,7 @@ public class IntakeAndIndexer implements Subsystem {
     if (flywheelToggle == false) {
       flywheelLeader.stopMotor();
     } else {
-      m_pidController.setReference(500, ControlType.kVelocity);
+      m_pidController.setReference(1250, ControlType.kVelocity);
     }
   }
 
