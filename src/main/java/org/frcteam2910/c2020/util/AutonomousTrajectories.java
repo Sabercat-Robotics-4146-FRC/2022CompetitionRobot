@@ -33,7 +33,7 @@ public class AutonomousTrajectories {
     straightAutoPartOne =
         new Trajectory(
             new SimplePathBuilder(Vector2.ZERO, Rotation2.ZERO)
-                .lineTo(new Vector2(-14, 0), Rotation2.ZERO)
+                .lineTo(new Vector2(-20, 0), Rotation2.ZERO)
                 .build(),
             slowConstraints,
             SAMPLE_DISTANCE);
