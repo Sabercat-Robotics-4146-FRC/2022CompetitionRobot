@@ -14,7 +14,6 @@ public class ShootBallCommand extends CommandBase {
 
   @Override
   public void execute() {
-    intakeAndIndexer.loadTopBall();
     intakeAndIndexer.toggleFlywheel();
   }
 

@@ -81,13 +81,13 @@ public class RobotContainer {
     //         new BasicDriveCommand(
     //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    // secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
     // secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
-    // primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
+    primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
-    // primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
+    primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
 
     // secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
 
@@ -107,11 +107,9 @@ public class RobotContainer {
 
     secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
 
-    // primaryController.getDPadButton(Direction.LEFT).whenPressed(() -> limelight.turnOff());
+    secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
 
-    // secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
-
-    // secondaryController.getBackButton().whenPressed(() -> intakeAndIndexer.indexerOff());
+    secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
   }
 
   public Command getAutonomousCommand() {

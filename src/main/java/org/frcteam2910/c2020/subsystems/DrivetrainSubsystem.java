@@ -205,8 +205,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       // Vector2 slowTranslationalVelocity = new Vector2(translationalVelocity.x / 2,
       // translationalVelocity.y / 2);
       driveSignal =
-          new HolonomicDriveSignal(
-              translationalVelocity.scale(0.5), rotationalVelocity, isFieldOriented);
+          new HolonomicDriveSignal(translationalVelocity, rotationalVelocity / 2, isFieldOriented);
     }
   }
 

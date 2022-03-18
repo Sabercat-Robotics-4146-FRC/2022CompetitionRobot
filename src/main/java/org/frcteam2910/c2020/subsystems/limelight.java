@@ -15,8 +15,12 @@ public class Limelight implements Subsystem {
 
   public double minCommand = 0.05;
 
+  public boolean limeToggle;
+
   public Limelight() {
     mLime = NetworkTableInstance.getDefault().getTable("limelight");
+    mLime.getEntry("ledMode").setNumber(1);
+    limeToggle = false;
   }
 
   public boolean getSeesTarget() {
@@ -31,8 +35,14 @@ public class Limelight implements Subsystem {
     return mLime.getEntry("ty").getDouble(0);
   }
 
-  public void turnOff() {
-    mLime.getEntry("ledMode").setNumber(1);
+  public void toggle() {
+    limeToggle = !limeToggle;
+
+    if (limeToggle == true) {
+      mLime.getEntry("ledMode").setNumber(3);
+    } else {
+      mLime.getEntry("ledMode").setNumber(1);
+    }
   }
 
   public double adjustHeading() {

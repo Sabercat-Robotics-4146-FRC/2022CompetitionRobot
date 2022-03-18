@@ -118,10 +118,10 @@ public class IntakeAndIndexer implements Subsystem {
 
   public void indexerAlwaysOn() {
     if (indexerTopSensor.get() == true) {
-      indexerBottom.setVoltage(3);
-      indexerTop.setVoltage(2.5);
+      indexerBottom.setVoltage(4);
+      indexerTop.setVoltage(4);
     } else if (indexerTopSensor.get() == false && indexerBottomSensor.get() == true) {
-      indexerBottom.setVoltage(2.5);
+      indexerBottom.setVoltage(4);
       indexerTop.stopMotor();
       ;
     } else {
