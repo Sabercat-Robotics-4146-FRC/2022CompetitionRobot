@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 // import edu.wpi.first.wpilibj.geometry.Translation2d;
 // import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -28,6 +29,8 @@ import org.frcteam2910.common.util.*;
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public static final double TRACKWIDTH = 24.0;
   public static final double WHEELBASE = 24.0;
+
+  public Timer m_Timer;
 
   public static final DrivetrainFeedforwardConstants FEEDFORWARD_CONSTANTS =
       new DrivetrainFeedforwardConstants( // tune with sysid, view w/ .3190 meters per rotation
@@ -92,6 +95,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     synchronized (sensorLock) {
       gyroscope.setInverted(false);
     }
+
+    m_Timer = new Timer();
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
