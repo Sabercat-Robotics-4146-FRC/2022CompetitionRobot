@@ -1,11 +1,10 @@
 package org.frcteam2910.c2020.subsystems;
 
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -145,7 +144,7 @@ public class IntakeAndIndexer implements Subsystem {
 
   public void toggleIntake() {
     if (intakeActive == false) {
-      intakeMotor.set(ControlMode.PercentOutput,-.5);
+      intakeMotor.set(ControlMode.PercentOutput, .5);
     } else if (intakeActive == true) {
       intakeMotor.set(ControlMode.PercentOutput, 0.0);
     }

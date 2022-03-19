@@ -205,9 +205,11 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       // Vector2 slowTranslationalVelocity = new Vector2(translationalVelocity.x / 2,
       // translationalVelocity.y / 2);
       driveSignal =
-          new HolonomicDriveSignal(translationalVelocity, rotationalVelocity / 2, isFieldOriented);
+          new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
     }
   }
+
+  public void autoDrive() {}
 
   public void resetPose(RigidTransform2 pose) {
     synchronized (kinematicsLock) {
@@ -302,8 +304,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       driveSignal = trajectorySignal.get();
       driveSignal =
           new HolonomicDriveSignal(
-              driveSignal.getTranslation().scale(1.0 / RobotController.getBatteryVoltage()),
-              driveSignal.getRotation() / RobotController.getBatteryVoltage(),
+              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage() - 3)),
+              driveSignal.getRotation() / (RobotController.getBatteryVoltage() - 3),
               driveSignal.isFieldOriented());
     } else {
       synchronized (stateLock) {
