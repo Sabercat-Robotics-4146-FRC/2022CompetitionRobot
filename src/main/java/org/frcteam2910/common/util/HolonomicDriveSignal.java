@@ -7,8 +7,9 @@ public class HolonomicDriveSignal {
   private final double rotation;
   private final boolean fieldOriented;
 
-  public HolonomicDriveSignal(Vector2 translation, double rotation, boolean fieldOriented) {
-    this.translation = translation;
+  public HolonomicDriveSignal(
+      Vector2 translationalVelocity, double rotation, boolean fieldOriented) {
+    this.translation = translationalVelocity;
     this.rotation = rotation;
     this.fieldOriented = fieldOriented;
   }

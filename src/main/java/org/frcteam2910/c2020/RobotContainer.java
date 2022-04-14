@@ -9,7 +9,9 @@ import org.frcteam2910.c2020.util.AutonomousChooser;
 import org.frcteam2910.c2020.util.AutonomousTrajectories;
 import org.frcteam2910.c2020.util.DriverReadout;
 import org.frcteam2910.common.math.Rotation2;
+import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.input.Axis;
+import org.frcteam2910.common.robot.input.DPadButton.Direction;
 import org.frcteam2910.common.robot.input.XboxController;
 
 public class RobotContainer {
@@ -17,16 +19,14 @@ public class RobotContainer {
   private final XboxController primaryController =
       new XboxController(Constants.PRIMARY_CONTROLLER_PORT);
 
-  private final XboxController secondaryController =
-      new XboxController(Constants.secondaryControllerPort);
-
   private final Superstructure superstructure = new Superstructure();
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
   private final EndLift endLift = new EndLift();
   private final CompressorClass compressorClass = new CompressorClass();
-  private final Limelight limelight = new Limelight();
+  private final limelight limelight = new limelight();
+  private final Flywheel flywheel = new Flywheel();
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
@@ -49,7 +49,6 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
     CommandScheduler.getInstance().registerSubsystem(endLift);
     CommandScheduler.getInstance().registerSubsystem(compressorClass);
-    CommandScheduler.getInstance().registerSubsystem(limelight);
 
     CommandScheduler.getInstance()
         .setDefaultCommand(
@@ -75,41 +74,31 @@ public class RobotContainer {
     // false).withTimeout(0.3)
     // );
 
-    // primaryController
-    //     .getRightJoystickButton()
-    //     .whileHeld(
-    //         new BasicDriveCommand(
-    //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
+    primaryController
+        .getDPadButton(Direction.UP)
+        .whileHeld(
+            new BasicDriveCommand(
+                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
+    primaryController.getBButton().whenPressed(() -> flywheel.toggleFlywheel());
 
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
-    primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
+    primaryController
+        .getRightJoystickButton()
+        .whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
 
-    secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
+    primaryController.getStartButton().whileHeld(() -> endLift.reverseSpool());
 
-    // // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
+    primaryController.getStartButton().whenReleased(() -> endLift.stopLift());
 
-    secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
+    primaryController.getXButton().whileHeld(() -> endLift.SendSpool());
 
-    // // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
+    primaryController.getXButton().whenReleased(() -> endLift.stopLift());
 
-    secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
-
-    // // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
-
-    secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
-
-    // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
-
-    secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
-
-    secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
-
-    secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
+    primaryController.getLeftJoystickButton().whenPressed(() -> endLift.togglePin());
   }
 
   public Command getAutonomousCommand() {

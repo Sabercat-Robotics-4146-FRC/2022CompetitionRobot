@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Optional;
 import org.frcteam2910.c2020.Constants;
@@ -27,6 +28,7 @@ import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.util.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
+  public boolean drive_flag;
   public static final double TRACKWIDTH = 24.0;
   public static final double WHEELBASE = 24.0;
 
@@ -92,6 +94,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final NetworkTableEntry odometryAngleEntry;
 
   public DrivetrainSubsystem() {
+    SmartDashboard.putBoolean("Drive Flag", false);
     synchronized (sensorLock) {
       gyroscope.setInverted(false);
     }
@@ -209,8 +212,12 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     synchronized (stateLock) {
       // Vector2 slowTranslationalVelocity = new Vector2(translationalVelocity.x / 2,
       // translationalVelocity.y / 2);
-      driveSignal =
-          new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
+      if (drive_flag) {
+        driveSignal =
+            new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
+      } else {
+        driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, isFieldOriented);
+      }
     }
   }
 
@@ -321,12 +328,30 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     updateModules(driveSignal, dt);
   }
 
+  public void aimRobot() {
+    double Kp = -0.1;
+    double min_command = 0.05;
+    double tx = limelight.getHorizontalOffset();
+
+    double heading_error = -tx;
+    double steering_adjust = 0.0;
+    if (tx > 1.0) {
+      steering_adjust = Kp * heading_error - min_command;
+    } else if (tx < 1.0) {
+      steering_adjust = Kp * heading_error + min_command;
+    }
+
+    drive(new Vector2(0, 0), steering_adjust, true);
+  }
+
   @Override
   public void periodic() {
     RigidTransform2 pose = getPose();
     odometryXEntry.setDouble(pose.translation.x);
     odometryYEntry.setDouble(pose.translation.y);
     odometryAngleEntry.setDouble(getPose().rotation.toDegrees());
+
+    drive_flag = SmartDashboard.getBoolean("Drive Flag", false);
   }
 
   public HolonomicMotionProfiledTrajectoryFollower getFollower() {

@@ -14,11 +14,13 @@ public class ShootBallCommand extends CommandBase {
 
   @Override
   public void execute() {
-    intakeAndIndexer.toggleFlywheel();
+    intakeAndIndexer.indexerAlwaysOn();
+    intakeAndIndexer.loadTopBall();
+    // intakeAndIndexer.toggleFlywheel();
   }
 
   @Override
   public void end(boolean interrupted) {
-    intakeAndIndexer.toggleFlywheel();
+    // intakeAndIndexer.toggleFlywheel();
   }
 }
