@@ -1,6 +1,7 @@
 package org.frcteam2910.c2020.subsystems;
 
-// import com.google.errorprone.annotations.concurrent.GuardedBy;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -11,9 +12,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Optional;
-import org.frcteam2910.c2020.Constants;
 import org.frcteam2910.c2020.Pigeon;
 import org.frcteam2910.common.control.*;
 import org.frcteam2910.common.drivers.Gyroscope;
@@ -25,6 +26,7 @@ import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.util.*;
+import static org.frcteam2910.c2020.Constants.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public static final double TRACKWIDTH = 24.0;
@@ -72,7 +74,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final SwerveModule[] modules;
 
   private final Object sensorLock = new Object();
-  private final Gyroscope gyroscope = new Pigeon(Constants.PIGEON_PORT);
+  private final Gyroscope gyroscope = new Pigeon(PIGEON_PORT);
 
   private final Object kinematicsLock = new Object();
   private final SwerveOdometry swerveOdometry =
@@ -100,46 +102,55 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
+    Mk4ModuleConfiguration defaultModuleConfig = new Mk4ModuleConfiguration();
+    defaultModuleConfig.setNominalVoltage(12.0); // FIXME calculate
+    defaultModuleConfig.setDriveCurrentLimit(80.0); // FIXME calculate
+    defaultModuleConfig.setSteerCurrentLimit(20.0); // FIXME calculate
+
     SwerveModule frontLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                 .withPosition(2, 0)
                 .withSize(2, 4),
+            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
+            DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
+            DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
+            DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
+            DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
     SwerveModule frontRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                 .withPosition(4, 0)
                 .withSize(2, 4),
+            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
+            DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
+            DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
+            DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
+            DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
     SwerveModule backLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                 .withPosition(6, 0)
                 .withSize(2, 4),
+            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
+            DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
+            DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
+            DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
+            DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
     SwerveModule backRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                 .withPosition(8, 0)
                 .withSize(2, 4),
+            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
+            DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
+            DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
+            DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
+            DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
 
     modules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
@@ -289,6 +300,29 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     }
   }
 
+  public void updateVoltageLimits(double dt) {
+    int[] driveMotorIds = {DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR, DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR, DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR, DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR};
+    int[] steerMotorIds = {DRIVETRAIN_BACK_LEFT_STEER_MOTOR, DRIVETRAIN_BACK_RIGHT_STEER_MOTOR, DRIVETRAIN_FRONT_LEFT_STEER_MOTOR, DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR};
+    int[] steerEncoderIds = {DRIVETRAIN_BACK_LEFT_STEER_ENCODER, DRIVETRAIN_BACK_RIGHT_STEER_ENCODER, DRIVETRAIN_FRONT_LEFT_STEER_ENCODER, DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER};
+    double[] steerOffsets = {DRIVETRAIN_BACK_LEFT_STEER_OFFSET, DRIVETRAIN_BACK_RIGHT_STEER_OFFSET, DRIVETRAIN_FRONT_LEFT_STEER_OFFSET, DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET};
+    for (int i=0; i<4; i++) {
+      TalonFX driveMotor = new TalonFX(driveMotorIds[i]);
+      Mk4ModuleConfiguration moduleConfig = new Mk4ModuleConfiguration();
+      double voltage = driveMotor.getBusVoltage();
+      SmartDashboard.putNumber(String.format("voltage on motor id # %d", i), voltage);
+      if (voltage < 12.5) {
+        moduleConfig.setNominalVoltage(12.0); // FIXME calculate
+        modules[i] = Mk4SwerveModuleHelper.createFalcon500(
+          moduleConfig,
+          Mk4SwerveModuleHelper.GearRatio.L2,
+          driveMotorIds[i],
+          steerMotorIds[i],
+          steerEncoderIds[i],
+          steerOffsets[i]);
+      }
+    }
+  }
+
   public RigidTransform2 getPoseAtTime(double timestamp) {
     synchronized (kinematicsLock) {
       if (latencyCompensationMap.isEmpty()) {
@@ -309,8 +343,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       driveSignal = trajectorySignal.get();
       driveSignal =
           new HolonomicDriveSignal(
-              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage() - 3)),
-              driveSignal.getRotation() / (RobotController.getBatteryVoltage() - 3),
+              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage())),
+              driveSignal.getRotation() / (RobotController.getBatteryVoltage()),
               driveSignal.isFieldOriented());
     } else {
       synchronized (stateLock) {
@@ -319,6 +353,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     }
 
     updateModules(driveSignal, dt);
+
+    updateVoltageLimits(dt);
   }
 
   @Override

@@ -188,6 +188,7 @@ public class Robot extends TimedRobot {
     } else if (distFromBBlueAngle == smallestDist) {
       SmartDashboard.putString("Autonomous settings", "Path B Blue");
     }
+
   }
 
   @Override

@@ -7,7 +7,6 @@ import org.frcteam2910.c2020.commands.*;
 import org.frcteam2910.c2020.subsystems.*;
 import org.frcteam2910.c2020.util.AutonomousChooser;
 import org.frcteam2910.c2020.util.AutonomousTrajectories;
-import org.frcteam2910.c2020.util.DriverReadout;
 import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.robot.input.Axis;
 import org.frcteam2910.common.robot.input.XboxController;
@@ -30,8 +29,6 @@ public class RobotContainer {
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
-
-  private final DriverReadout driverReadout;
 
   public RobotContainer() {
     try {
@@ -59,8 +56,6 @@ public class RobotContainer {
                 getDriveForwardAxis(),
                 getDriveStrafeAxis(),
                 getDriveRotationAxis()));
-
-    driverReadout = new DriverReadout(this);
 
     configureButtonBindings();
   }
@@ -147,4 +142,5 @@ public class RobotContainer {
   public AutonomousChooser getAutonomousChooser() {
     return autonomousChooser;
   }
+
 }
