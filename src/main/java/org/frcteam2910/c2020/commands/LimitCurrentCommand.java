@@ -1,4 +1,3 @@
-
 //   public void setSubsystemMotorsLimit() {
 
 //     int[] neoIds = {21, 22, 31, 32, 41, 51, 52};
@@ -11,4 +10,3 @@
 //       canMotor.setSmartCurrentLimit(?);
 //     }
 //   }
-

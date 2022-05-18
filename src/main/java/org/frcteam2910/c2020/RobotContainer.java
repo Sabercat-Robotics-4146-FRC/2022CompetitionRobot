@@ -23,8 +23,8 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
-  private final EndLift endLift = new EndLift();
-  private final CompressorClass compressorClass = new CompressorClass();
+  // private final EndLift endLift = new EndLift();
+  // private final CompressorClass compressorClass = new CompressorClass();
   private final Limelight limelight = new Limelight();
 
   private AutonomousTrajectories autonomousTrajectories;
@@ -44,8 +44,8 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().registerSubsystem(drivetrainSubsystem);
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
-    CommandScheduler.getInstance().registerSubsystem(endLift);
-    CommandScheduler.getInstance().registerSubsystem(compressorClass);
+    // CommandScheduler.getInstance().registerSubsystem(endLift);
+    // CommandScheduler.getInstance().registerSubsystem(compressorClass);
     CommandScheduler.getInstance().registerSubsystem(limelight);
 
     CommandScheduler.getInstance()
@@ -76,35 +76,36 @@ public class RobotContainer {
     //         new BasicDriveCommand(
     //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    // FIXME secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
     secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
-    primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
+    // FIXME primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
-    primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
+    // FIXME primaryController.getYButton().whenPressed(() ->
+    // intakeAndIndexer.extendIntakeSubsystem());
 
-    secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
+    // FIXME secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
 
     // // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
 
-    secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
+    // FIXME secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
 
     // // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
 
-    secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
+    // FIXME secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
 
     // // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
 
-    secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
+    // FIXME secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
 
     // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
 
-    secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
+    // FIXME secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
 
-    secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
+    // FIXME secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
 
-    secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
+    // FIXME secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
   }
 
   public Command getAutonomousCommand() {
@@ -142,5 +143,4 @@ public class RobotContainer {
   public AutonomousChooser getAutonomousChooser() {
     return autonomousChooser;
   }
-
 }

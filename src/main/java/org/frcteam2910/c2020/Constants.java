@@ -34,19 +34,19 @@ public class Constants {
 
   public static final double BOTTOM_FLYWHEEL_GEAR_RATIO = 1.5;
 
-  public static final int intakeMotor = 41;
+  public static final int INTAKE_MOTOR_PORT = 41;
 
-  public static final int indexerBottom = 21;
-  public static final int indexerTop = 22;
+  // public static final int indexerBottom = 21;
+  // public static final int indexerTop = 22;
 
-  public static final int indexerBottomSensor = 1;
-  public static final int indexerTopSensor = 2;
+  // public static final int indexerBottomSensor = 1;
+  // public static final int indexerTopSensor = 2;
 
-  public static final int endLiftRight = 52;
-  public static final int endLiftLeft = 51;
+  // public static final int endLiftRight = 52;
+  // public static final int endLiftLeft = 51;
 
-  public static final int flywheelLeader = 31;
-  public static final int flywheelfollower = 32;
+  public static final int flywheelLeader = 12; // 31;
+  public static final int flywheelfollower = 5; // 32;
 
   public static final int liftPin = 0;
 
@@ -54,7 +54,7 @@ public class Constants {
 
   public static final int secondaryControllerPort = 1;
 
-  public static final int PIGEON_PORT = 16;
+  // public static final int PIGEON_PORT = 16;
 
   public static final int PRESSURE_SENSOR_PORT = 0;
 }

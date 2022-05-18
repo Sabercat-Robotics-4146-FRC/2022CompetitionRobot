@@ -52,12 +52,12 @@ public class IntakeAndIndexer implements Subsystem {
 
   public IntakeAndIndexer() {
     kHood = .40;
-    indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
-    indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
-    indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
-    indexerTopSensor = new DigitalInput(Constants.indexerTopSensor);
-    intakeMotor = new TalonSRX(Constants.intakeMotor);
-    intakeActive = false;
+    // indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
+    // indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
+    // indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
+    // indexerTopSensor = new DigitalInput(Constants.indexerTopSensor);
+    // intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_PORT);
+    // intakeActive = false;
 
     intakePiston = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
     intakePistonExtended = false;
@@ -168,6 +168,22 @@ public class IntakeAndIndexer implements Subsystem {
     indexerToggle = !indexerToggle;
   }
 
+  public void updateVoltageLimits() {
+    int[] flywheelMotorIds = {
+      Constants.flywheelLeader, Constants.flywheelfollower
+    }; // FIXME only does flywheel motors
+    for (int i = 0; i < 2; i++) {
+      CANSparkMax canMotor = new CANSparkMax(flywheelMotorIds[i], MotorType.kBrushless);
+      double voltage = canMotor.getBusVoltage();
+      SmartDashboard.putNumber(String.format("voltage on motor id # %d", i), voltage);
+
+      if (voltage < 12.5) {
+        // canMotor.enableVoltageCompensation(); // FIXME calculate
+        // canMotor.setSmartCurrentLimit();
+      }
+    }
+  }
+
   @Override
   public void periodic() {
     intakePiston.set(intakePistonExtended);
@@ -216,5 +232,7 @@ public class IntakeAndIndexer implements Subsystem {
     }
 
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
+
+    updateVoltageLimits();
   }
 }
