@@ -2,22 +2,22 @@ package org.frcteam2910.c2020.subsystems;
 
 import static org.frcteam2910.c2020.Constants.*;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
-// import edu.wpi.first.wpilibj.geometry.Translation2d;
-// import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Optional;
+import org.frcteam2910.c2020.Constants;
+import org.frcteam2910.c2020.Pigeon;
 import org.frcteam2910.common.control.*;
+import org.frcteam2910.common.drivers.Gyroscope;
 import org.frcteam2910.common.kinematics.ChassisVelocity;
 import org.frcteam2910.common.kinematics.SwerveKinematics;
 import org.frcteam2910.common.kinematics.SwerveOdometry;
@@ -73,7 +73,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final SwerveModule[] modules;
 
   private final Object sensorLock = new Object();
-  // private final Gyroscope gyroscope = new Pigeon(PIGEON_PORT);
+  private final Gyroscope gyroscope = new Pigeon(Constants.PIGEON_PORT);
 
   private final Object kinematicsLock = new Object();
   private final SwerveOdometry swerveOdometry =
@@ -102,9 +102,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     Mk4ModuleConfiguration defaultModuleConfig = new Mk4ModuleConfiguration();
-    defaultModuleConfig.setNominalVoltage(12.0); // FIXME calculate
-    defaultModuleConfig.setDriveCurrentLimit(80.0); // FIXME calculate
-    defaultModuleConfig.setSteerCurrentLimit(20.0); // FIXME calculate
+    defaultModuleConfig.setNominalVoltage(11.5);
+    defaultModuleConfig.setDriveCurrentLimit(80.0);
+    defaultModuleConfig.setSteerCurrentLimit(15.0);
 
     SwerveModule frontLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
@@ -153,6 +153,24 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     modules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
+
+    TalonSRX[] talons =
+        new TalonSRX[] {
+          new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR)
+        };
+
+    for (var talon : talons) {
+      talon.configPeakCurrentLimit(90); // max. current (amps)
+      talon.configPeakCurrentDuration(
+          5); // # milliseconds after peak reached before regulation starts
+      talon.configContinuousCurrentLimit(70); // continuous current (amps) after regluation
+      talon.configOpenloopRamp(.5); // # seconds to reach peak throttle
+      talon.configPeakOutputForward(.9); // value [0,1] to scale output
+      talon.configPeakOutputReverse(.9);
+    }
 
     odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
     odometryYEntry = tab.add("Y", 0.0).withPosition(0, 1).withSize(1, 1).getEntry();
@@ -217,10 +235,14 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void drive(
       Vector2 translationalVelocity, double rotationalVelocity, boolean isFieldOriented) {
     synchronized (stateLock) {
-      // Vector2 slowTranslationalVelocity = new Vector2(translationalVelocity.x / 2,
-      // translationalVelocity.y / 2);
+      Vector2 slowTranslationalVelocity =
+          new Vector2(translationalVelocity.x / 2, translationalVelocity.y / 2);
+
       driveSignal =
-          new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
+          new HolonomicDriveSignal(
+              translationalVelocity,
+              rotationalVelocity,
+              isFieldOriented); // change to slowTranslationalVelocity to drive slower
     }
   }
 
@@ -235,7 +257,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public void resetGyroAngle(Rotation2 angle) {
     synchronized (sensorLock) {
-      // gyroscope.setAdjustmentAngle(gyroscope.getUnadjustedAngle().rotateBy(angle.inverse()));
+      gyroscope.setAdjustmentAngle(gyroscope.getUnadjustedAngle().rotateBy(angle.inverse()));
     }
   }
 
@@ -260,20 +282,20 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     Rotation2 angle;
     double angularVelocity;
     synchronized (sensorLock) {
-      // angle = gyroscope.getAngle();
-      // angularVelocity = gyroscope.getRate();
+      angle = gyroscope.getAngle();
+      angularVelocity = gyroscope.getRate();
     }
 
     ChassisVelocity velocity = swerveKinematics.toChassisVelocity(moduleVelocities);
 
     synchronized (kinematicsLock) {
-      // this.pose = swerveOdometry.update(angle, dt, moduleVelocities);
+      this.pose = swerveOdometry.update(angle, dt, moduleVelocities);
       if (latencyCompensationMap.size() > MAX_LATENCY_COMPENSATION_MAP_ENTRIES) {
         latencyCompensationMap.remove(latencyCompensationMap.firstKey());
       }
       latencyCompensationMap.put(new InterpolatingDouble(time), pose);
       this.velocity = velocity.getTranslationalVelocity();
-      // this.angularVelocity = angularVelocity;
+      this.angularVelocity = angularVelocity;
     }
   }
 
@@ -296,49 +318,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     for (int i = 0; i < moduleOutputs.length; i++) {
       var module = modules[i];
       module.set(moduleOutputs[i].length * 12.0, moduleOutputs[i].getAngle().toRadians());
-    }
-  }
-
-  public void updateVoltageLimits(double dt) {
-    int[] driveMotorIds = {
-      DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
-      DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
-      DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
-      DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR
-    };
-    int[] steerMotorIds = {
-      DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
-      DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
-      DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
-      DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR
-    };
-    int[] steerEncoderIds = {
-      DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
-      DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
-      DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
-      DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER
-    };
-    double[] steerOffsets = {
-      DRIVETRAIN_BACK_LEFT_STEER_OFFSET,
-      DRIVETRAIN_BACK_RIGHT_STEER_OFFSET,
-      DRIVETRAIN_FRONT_LEFT_STEER_OFFSET,
-      DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET
-    };
-    for (int i = 0; i < 4; i++) {
-      TalonFX driveMotor = new TalonFX(driveMotorIds[i]);
-      Mk4ModuleConfiguration moduleConfig = new Mk4ModuleConfiguration();
-      double voltage = driveMotor.getBusVoltage();
-      SmartDashboard.putNumber(String.format("voltage on motor id # %d", i), voltage);
-      if (voltage < 12.5) {
-        /*moduleConfig.setNominalVoltage(12.0); // FIXME calculate
-        modules[i] = Mk4SwerveModuleHelper.createFalcon500(
-          moduleConfig,
-          Mk4SwerveModuleHelper.GearRatio.L2,
-          driveMotorIds[i],
-          steerMotorIds[i],
-          steerEncoderIds[i],
-          steerOffsets[i]);*/
-      }
     }
   }
 
@@ -372,8 +351,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     }
 
     updateModules(driveSignal, dt);
-
-    updateVoltageLimits(dt);
   }
 
   @Override

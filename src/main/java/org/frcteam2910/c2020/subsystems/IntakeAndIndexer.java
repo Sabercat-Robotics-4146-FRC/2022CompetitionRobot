@@ -25,7 +25,7 @@ public class IntakeAndIndexer implements Subsystem {
   public boolean intakePistonExtended;
 
   public CANSparkMax flywheelLeader;
-  public CANSparkMax flywheelfollower;
+  public CANSparkMax flywheelFollower;
 
   public boolean enabled;
   public boolean pressureSwitch;
@@ -52,25 +52,25 @@ public class IntakeAndIndexer implements Subsystem {
 
   public IntakeAndIndexer() {
     kHood = .40;
-    // indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
-    // indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
-    // indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
-    // indexerTopSensor = new DigitalInput(Constants.indexerTopSensor);
-    // intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_PORT);
-    // intakeActive = false;
+    indexerBottom = new CANSparkMax(Constants.INDEXER_BOTTOM, MotorType.kBrushless);
+    indexerTop = new CANSparkMax(Constants.INDEXER_TOP, MotorType.kBrushless);
+    indexerBottomSensor = new DigitalInput(Constants.INDEXER_BOTTOM_SENSOR);
+    indexerTopSensor = new DigitalInput(Constants.INDEXER_TOP_SENSOR);
+    intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_PORT);
+    intakeActive = false;
 
     intakePiston = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
     intakePistonExtended = false;
 
     intakePiston.set(intakePistonExtended);
 
-    flywheelLeader = new CANSparkMax(Constants.flywheelLeader, MotorType.kBrushless);
+    flywheelLeader = new CANSparkMax(Constants.FLYWHEEL_LEADER, MotorType.kBrushless);
     flywheelLeader.restoreFactoryDefaults();
-    flywheelfollower = new CANSparkMax(Constants.flywheelfollower, MotorType.kBrushless);
-    flywheelfollower.restoreFactoryDefaults();
+    flywheelFollower = new CANSparkMax(Constants.FLYWHEEL_FOLLOWER, MotorType.kBrushless);
+    flywheelFollower.restoreFactoryDefaults();
 
     flywheelLeader.setInverted(true);
-    flywheelfollower.follow(flywheelLeader, true);
+    flywheelFollower.follow(flywheelLeader, true);
 
     m_pidController = flywheelLeader.getPIDController();
 
@@ -168,13 +168,10 @@ public class IntakeAndIndexer implements Subsystem {
     indexerToggle = !indexerToggle;
   }
 
-  public void updateVoltageLimits() {
-    int[] flywheelMotorIds = {
-      Constants.flywheelLeader, Constants.flywheelfollower
-    }; // FIXME only does flywheel motors
+  /*public void updateVoltageLimits() {
+    CANSparkMax[] motors = {flywheelLeader, flywheelFollower}; // FIXME only does flywheel motors
     for (int i = 0; i < 2; i++) {
-      CANSparkMax canMotor = new CANSparkMax(flywheelMotorIds[i], MotorType.kBrushless);
-      double voltage = canMotor.getBusVoltage();
+      double voltage = motors[i].getBusVoltage();
       SmartDashboard.putNumber(String.format("voltage on motor id # %d", i), voltage);
 
       if (voltage < 12.5) {
@@ -182,7 +179,7 @@ public class IntakeAndIndexer implements Subsystem {
         // canMotor.setSmartCurrentLimit();
       }
     }
-  }
+  }*/
 
   @Override
   public void periodic() {
@@ -233,6 +230,6 @@ public class IntakeAndIndexer implements Subsystem {
 
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
 
-    updateVoltageLimits();
+    // updateVoltageLimits();
   }
 }

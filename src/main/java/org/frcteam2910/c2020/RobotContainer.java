@@ -17,14 +17,14 @@ public class RobotContainer {
       new XboxController(Constants.PRIMARY_CONTROLLER_PORT);
 
   private final XboxController secondaryController =
-      new XboxController(Constants.secondaryControllerPort);
+      new XboxController(Constants.SECONDARY_CONTROLLER_PORT);
 
   private final Superstructure superstructure = new Superstructure();
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
-  // private final EndLift endLift = new EndLift();
-  // private final CompressorClass compressorClass = new CompressorClass();
+  private final EndLift endLift = new EndLift();
+  private final CompressorClass compressorClass = new CompressorClass();
   private final Limelight limelight = new Limelight();
 
   private AutonomousTrajectories autonomousTrajectories;
@@ -44,8 +44,8 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().registerSubsystem(drivetrainSubsystem);
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
-    // CommandScheduler.getInstance().registerSubsystem(endLift);
-    // CommandScheduler.getInstance().registerSubsystem(compressorClass);
+    CommandScheduler.getInstance().registerSubsystem(endLift);
+    CommandScheduler.getInstance().registerSubsystem(compressorClass);
     CommandScheduler.getInstance().registerSubsystem(limelight);
 
     CommandScheduler.getInstance()
@@ -78,28 +78,27 @@ public class RobotContainer {
 
     // FIXME secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
+    // FIXME secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
 
-    // FIXME primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
+    primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
-    // FIXME primaryController.getYButton().whenPressed(() ->
-    // intakeAndIndexer.extendIntakeSubsystem());
+    primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
 
     // FIXME secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
 
-    // // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
+    // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
 
     // FIXME secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
 
-    // // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
+    // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
 
     // FIXME secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
 
-    // // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
+    // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
 
     // FIXME secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
 
-    // primaryController.getXButton().whenReleased(() -> endLift.togglePin());
+    primaryController.getXButton().whenReleased(() -> endLift.togglePin());
 
     // FIXME secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
 
