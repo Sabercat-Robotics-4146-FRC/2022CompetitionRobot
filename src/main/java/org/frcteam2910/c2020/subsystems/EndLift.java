@@ -24,6 +24,13 @@ public class EndLift implements Subsystem {
     liftMotorLeader.setInverted(true);
     liftMotorFollower.follow(liftMotorLeader, true);
 
+    CANSparkMax[] sparkMaxs = {liftMotorLeader, liftMotorFollower};
+
+    for (var sparkMax : sparkMaxs) {
+      sparkMax.setSmartCurrentLimit(80); // current limit (amps)
+      sparkMax.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
+    }
+
     liftPin = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.LIFT_PIN);
 
     pinToggle = false;

@@ -1,5 +1,6 @@
 package org.frcteam2910.c2020;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.IOException;
@@ -76,35 +77,43 @@ public class RobotContainer {
     //         new BasicDriveCommand(
     //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    // FIXME secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
-
-    // FIXME secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.toggleFlywheel());
-
-    primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
-
     primaryController.getYButton().whenPressed(() -> intakeAndIndexer.extendIntakeSubsystem());
-
-    // FIXME secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
-
-    // primaryController.getStartButton().whenPressed(() -> endLift.togglePin());
-
-    // FIXME secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
-
-    // primaryController.getStartButton().whenReleased(() -> endLift.togglePin());
-
-    // FIXME secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
 
     // primaryController.getXButton().whenPressed(() -> endLift.togglePin());
 
-    // FIXME secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
-
     primaryController.getXButton().whenReleased(() -> endLift.togglePin());
 
-    // FIXME secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
+    secondaryController
+        .getAButton()
+        .whenPressed(() -> intakeAndIndexer.toggleIndexer());
 
-    // FIXME secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
+    secondaryController.getYButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    // FIXME secondaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIndexer());
+    secondaryController
+        .getYButton()
+        .whenPressed(
+            () -> {
+              intakeAndIndexer.toggleFlywheel();
+              if (getBatteryVoltage() <= 10) {
+                drivetrainSubsystem.reduceCurrentDraw();
+              }
+            });
+
+    secondaryController.getRightBumperButton().whileHeld(() -> endLift.reverseSpool());
+
+    secondaryController.getLeftBumperButton().whileHeld(() -> endLift.SendSpool());
+
+    secondaryController.getRightBumperButton().whenReleased(() -> endLift.stopLift());
+
+    secondaryController.getLeftBumperButton().whenReleased(() -> endLift.stopLift());
+
+    secondaryController.getBButton().whenPressed(() -> endLift.togglePin());
+
+    secondaryController.getStartButton().whenPressed(() -> limelight.toggle());
+  }
+
+  public double getBatteryVoltage() {
+    return RobotController.getBatteryVoltage();
   }
 
   public Command getAutonomousCommand() {

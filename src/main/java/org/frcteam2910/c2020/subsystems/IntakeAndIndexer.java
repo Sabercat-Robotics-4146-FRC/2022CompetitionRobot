@@ -72,6 +72,15 @@ public class IntakeAndIndexer implements Subsystem {
     flywheelLeader.setInverted(true);
     flywheelFollower.follow(flywheelLeader, true);
 
+    CANSparkMax[] sparkMaxs = {indexerBottom, indexerTop, flywheelLeader, flywheelFollower};
+
+    for (var sparkMax : sparkMaxs) {
+      sparkMax.setSmartCurrentLimit(80); // current limit (amps)
+      sparkMax.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
+      sparkMax.enableVoltageCompensation(
+          12);
+    }
+
     m_pidController = flywheelLeader.getPIDController();
 
     m_encoder = flywheelLeader.getEncoder();
@@ -96,7 +105,7 @@ public class IntakeAndIndexer implements Subsystem {
     kMaxOutput = 1;
     kMinOutput = -1;
     maxRPM = 5874;
-    setPoint = 500;
+    setPoint = 5000;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
@@ -160,7 +169,7 @@ public class IntakeAndIndexer implements Subsystem {
     if (flywheelToggle == false) {
       flywheelLeader.stopMotor();
     } else {
-      m_pidController.setReference(1250, ControlType.kVelocity);
+      m_pidController.setReference(5000, ControlType.kVelocity);
     }
   }
 
@@ -168,21 +177,12 @@ public class IntakeAndIndexer implements Subsystem {
     indexerToggle = !indexerToggle;
   }
 
-  /*public void updateVoltageLimits() {
-    CANSparkMax[] motors = {flywheelLeader, flywheelFollower}; // FIXME only does flywheel motors
-    for (int i = 0; i < 2; i++) {
-      double voltage = motors[i].getBusVoltage();
-      SmartDashboard.putNumber(String.format("voltage on motor id # %d", i), voltage);
-
-      if (voltage < 12.5) {
-        // canMotor.enableVoltageCompensation(); // FIXME calculate
-        // canMotor.setSmartCurrentLimit();
-      }
-    }
-  }*/
-
   @Override
   public void periodic() {
+
+    SmartDashboard.putNumber("indexer bus voltage", indexerTop.getBusVoltage());
+    SmartDashboard.putNumber("flywheel bus voltage", flywheelLeader.getBusVoltage());
+
     intakePiston.set(intakePistonExtended);
 
     if (indexerToggle) {
@@ -229,7 +229,5 @@ public class IntakeAndIndexer implements Subsystem {
     }
 
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
-
-    // updateVoltageLimits();
   }
 }

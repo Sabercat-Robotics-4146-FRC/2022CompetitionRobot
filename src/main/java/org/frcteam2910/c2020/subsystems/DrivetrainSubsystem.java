@@ -3,7 +3,6 @@ package org.frcteam2910.c2020.subsystems;
 import static org.frcteam2910.c2020.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -71,6 +70,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   // );
 
   private final SwerveModule[] modules;
+  private final TalonSRX[] talons;
 
   private final Object sensorLock = new Object();
   private final Gyroscope gyroscope = new Pigeon(Constants.PIGEON_PORT);
@@ -101,17 +101,11 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
-    Mk4ModuleConfiguration defaultModuleConfig = new Mk4ModuleConfiguration();
-    defaultModuleConfig.setNominalVoltage(11.5);
-    defaultModuleConfig.setDriveCurrentLimit(80.0);
-    defaultModuleConfig.setSteerCurrentLimit(15.0);
-
     SwerveModule frontLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                 .withPosition(2, 0)
                 .withSize(2, 4),
-            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
             DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
             DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
@@ -122,7 +116,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                 .withPosition(4, 0)
                 .withSize(2, 4),
-            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
             DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
             DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
@@ -133,7 +126,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                 .withPosition(6, 0)
                 .withSize(2, 4),
-            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
             DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
             DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
@@ -144,7 +136,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                 .withPosition(8, 0)
                 .withSize(2, 4),
-            defaultModuleConfig,
             Mk4SwerveModuleHelper.GearRatio.L2,
             DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
             DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
@@ -154,7 +145,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     modules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
 
-    TalonSRX[] talons =
+    talons =
         new TalonSRX[] {
           new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
           new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
@@ -168,8 +159,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
           5); // # milliseconds after peak reached before regulation starts
       talon.configContinuousCurrentLimit(70); // continuous current (amps) after regluation
       talon.configOpenloopRamp(.5); // # seconds to reach peak throttle
-      talon.configPeakOutputForward(.9); // value [0,1] to scale output
-      talon.configPeakOutputReverse(.9);
+      // talon.configPeakOutputForward(.9); // value [0,1] to scale output
+      // talon.configPeakOutputReverse(-.9); // value [-1,0] to scale output
     }
 
     odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
@@ -238,11 +229,19 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       Vector2 slowTranslationalVelocity =
           new Vector2(translationalVelocity.x / 2, translationalVelocity.y / 2);
 
-      driveSignal =
-          new HolonomicDriveSignal(
-              translationalVelocity,
-              rotationalVelocity,
-              isFieldOriented); // change to slowTranslationalVelocity to drive slower
+      double totalVoltage = RobotController.getBatteryVoltage();
+
+      if (totalVoltage > 8) {
+        driveSignal =
+            new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
+      } else {
+        driveSignal =
+            new HolonomicDriveSignal(
+                slowTranslationalVelocity,
+                rotationalVelocity,
+                isFieldOriented); // if voltage is too low, reduce translational velocity to prevent
+        // brownout
+      }
     }
   }
 
@@ -363,5 +362,12 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public HolonomicMotionProfiledTrajectoryFollower getFollower() {
     return follower;
+  }
+
+  public void reduceCurrentDraw() {
+    for (var talon : talons) {
+      talon.configPeakOutputForward(.7); // value [0,1] to scale output
+      talon.configPeakOutputReverse(-.7); // value [-1,0] to scale output
+    }
   }
 }
