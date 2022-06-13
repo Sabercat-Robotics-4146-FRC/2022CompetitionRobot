@@ -18,13 +18,13 @@ public class EndLift implements Subsystem {
   private boolean pinToggle;
 
   public EndLift() {
-    liftMotorLeader = new CANSparkMax(Constants.endLiftLeft, MotorType.kBrushless);
-    liftMotorFollower = new CANSparkMax(Constants.endLiftRight, MotorType.kBrushless);
+    liftMotorLeader = new CANSparkMax(Constants.END_LIFT_LEFT, MotorType.kBrushless);
+    liftMotorFollower = new CANSparkMax(Constants.END_LIFT_RIGHT, MotorType.kBrushless);
 
     liftMotorLeader.setInverted(true);
     liftMotorFollower.follow(liftMotorLeader, true);
 
-    liftPin = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.liftPin);
+    liftPin = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.LIFT_PIN);
 
     pinToggle = false;
   }

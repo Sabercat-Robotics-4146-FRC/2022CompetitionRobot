@@ -34,11 +34,11 @@ public class IntakeAndIndexer implements Subsystem {
   private boolean indexerToggle;
 
   public IntakeAndIndexer() {
-    indexerBottom = new CANSparkMax(Constants.indexerBottom, MotorType.kBrushless);
-    indexerTop = new CANSparkMax(Constants.indexerTop, MotorType.kBrushless);
-    indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
-    indexerTopSensor = new DigitalInput(Constants.indexerTopSensor);
-    intakeMotor = new TalonSRX(Constants.intakeMotor);
+    indexerBottom = new CANSparkMax(Constants.INDEXER_BOTTOM, MotorType.kBrushless);
+    indexerTop = new CANSparkMax(Constants.INDEXER_TOP, MotorType.kBrushless);
+    indexerBottomSensor = new DigitalInput(Constants.INDEXER_BOTTOM_SENSOR);
+    indexerTopSensor = new DigitalInput(Constants.INDEXER_TOP_SENSOR);
+    intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_PORT);
     intakeActive = false;
 
     intakePiston = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
@@ -47,6 +47,15 @@ public class IntakeAndIndexer implements Subsystem {
     intakePiston.set(intakePistonExtended);
 
     indexerToggle = false;
+
+    CANSparkMax[] sparkMaxs = {indexerBottom, indexerTop};
+
+    for (var sparkMax : sparkMaxs) {
+      sparkMax.setSmartCurrentLimit(80); // current limit (amps)
+      sparkMax.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
+      sparkMax.enableVoltageCompensation(
+          12);
+    }
   }
 
   public void indexerAlwaysOn() {

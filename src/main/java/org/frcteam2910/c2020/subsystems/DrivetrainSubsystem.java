@@ -1,12 +1,12 @@
 package org.frcteam2910.c2020.subsystems;
 
-// import com.google.errorprone.annotations.concurrent.GuardedBy;
+import static org.frcteam2910.c2020.Constants.*;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
-// import edu.wpi.first.wpilibj.geometry.Translation2d;
-// import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -72,6 +72,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   // );
 
   private final SwerveModule[] modules;
+  private final TalonSRX[] talons;
 
   private final Object sensorLock = new Object();
   private final Gyroscope gyroscope = new Pigeon(Constants.PIGEON_PORT);
@@ -109,43 +110,61 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
                 .withPosition(2, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
-            Constants.DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
+            DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
+            DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
+            DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
+            DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
     SwerveModule frontRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                 .withPosition(4, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
-            Constants.DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
+            DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
+            DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
+            DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
+            DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
     SwerveModule backLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                 .withPosition(6, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
-            Constants.DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
+            DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
+            DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
+            DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
+            DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
     SwerveModule backRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                 .withPosition(8, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            Constants.DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
-            Constants.DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
+            DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
+            DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
+            DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
+            DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
 
     modules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
+
+    talons =
+        new TalonSRX[] {
+          new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR)
+        };
+
+    for (var talon : talons) {
+      talon.configPeakCurrentLimit(90); // max. current (amps)
+      talon.configPeakCurrentDuration(
+          5); // # milliseconds after peak reached before regulation starts
+      talon.configContinuousCurrentLimit(70); // continuous current (amps) after regluation
+      talon.configOpenloopRamp(.5); // # seconds to reach peak throttle
+      // talon.configPeakOutputForward(.9); // value [0,1] to scale output
+      // talon.configPeakOutputReverse(-.9); // value [-1,0] to scale output
+    }
 
     odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
     odometryYEntry = tab.add("Y", 0.0).withPosition(0, 1).withSize(1, 1).getEntry();
@@ -210,11 +229,21 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void drive(
       Vector2 translationalVelocity, double rotationalVelocity, boolean isFieldOriented) {
     synchronized (stateLock) {
-      // Vector2 slowTranslationalVelocity = new Vector2(translationalVelocity.x / 2,
-      // translationalVelocity.y / 2);
-      if (drive_flag) {
+      Vector2 slowTranslationalVelocity =
+          new Vector2(translationalVelocity.x / 2, translationalVelocity.y / 2);
+
+      double totalVoltage = RobotController.getBatteryVoltage();
+
+      if (totalVoltage > 8 && drive_flag) {
         driveSignal =
             new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
+      } else if (totalVoltage <= 8 && !drive_flag) {
+        driveSignal =
+            new HolonomicDriveSignal(
+                slowTranslationalVelocity,
+                rotationalVelocity,
+                isFieldOriented); // if voltage is too low, reduce translational velocity to prevent
+        // brownout
       } else {
         driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, isFieldOriented);
       }
@@ -316,8 +345,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       driveSignal = trajectorySignal.get();
       driveSignal =
           new HolonomicDriveSignal(
-              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage() - 3)),
-              driveSignal.getRotation() / (RobotController.getBatteryVoltage() - 3),
+              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage())),
+              driveSignal.getRotation() / (RobotController.getBatteryVoltage()),
               driveSignal.isFieldOriented());
     } else {
       synchronized (stateLock) {
@@ -356,5 +385,12 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public HolonomicMotionProfiledTrajectoryFollower getFollower() {
     return follower;
+  }
+
+  public void reduceCurrentDraw() {
+    for (var talon : talons) {
+      talon.configPeakOutputForward(.7); // value [0,1] to scale output
+      talon.configPeakOutputReverse(-.7); // value [-1,0] to scale output
+    }
   }
 }

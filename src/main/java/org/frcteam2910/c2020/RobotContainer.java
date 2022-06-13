@@ -1,5 +1,6 @@
 package org.frcteam2910.c2020;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.IOException;
@@ -19,14 +20,16 @@ public class RobotContainer {
   private final XboxController primaryController =
       new XboxController(Constants.PRIMARY_CONTROLLER_PORT);
 
+  private final XboxController secondaryController =
+      new XboxController(Constants.SECONDARY_CONTROLLER_PORT);
+
   private final Superstructure superstructure = new Superstructure();
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
   private final EndLift endLift = new EndLift();
   private final CompressorClass compressorClass = new CompressorClass();
-  private final limelight limelight = new limelight();
-  private final Flywheel flywheel = new Flywheel();
+  private final Limelight limelight = new Limelight();
 
   private AutonomousTrajectories autonomousTrajectories;
   private final AutonomousChooser autonomousChooser;
@@ -49,6 +52,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
     CommandScheduler.getInstance().registerSubsystem(endLift);
     CommandScheduler.getInstance().registerSubsystem(compressorClass);
+    CommandScheduler.getInstance().registerSubsystem(limelight);
 
     CommandScheduler.getInstance()
         .setDefaultCommand(
@@ -65,14 +69,21 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    primaryController
-        .getBackButton()
-        .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
+
+    // primaryController
+    //     .getRightJoystickButton()
+    //     .whileHeld(
+    //         new BasicDriveCommand(
+    //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
     // primaryController.getAButton().whenPressed(
     //         new BasicDriveCommand(drivetrainSubsystem, new Vector2(-0.5, 0.0), 0.0,
     // false).withTimeout(0.3)
     // );
+
+    primaryController
+    .getBackButton()
+    .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
 
     primaryController
         .getDPadButton(Direction.UP)
@@ -82,7 +93,12 @@ public class RobotContainer {
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    primaryController.getBButton().whenPressed(() -> flywheel.toggleFlywheel());
+    primaryController.getBButton().whenPressed(() -> {
+        flywheel.toggleFlywheel();
+        if (getBatteryVoltage() <= 10) {
+          drivetrainSubsystem.reduceCurrentDraw();
+        }
+    });
 
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
@@ -99,6 +115,10 @@ public class RobotContainer {
     primaryController.getXButton().whenReleased(() -> endLift.stopLift());
 
     primaryController.getLeftJoystickButton().whenPressed(() -> endLift.togglePin());
+  }
+
+  public double getBatteryVoltage() {
+    return RobotController.getBatteryVoltage();
   }
 
   public Command getAutonomousCommand() {
