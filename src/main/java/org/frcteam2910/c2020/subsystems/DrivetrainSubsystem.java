@@ -237,7 +237,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       if (totalVoltage > 8 && drive_flag) {
         driveSignal =
             new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
-      } else if (totalVoltage <= 8 && !drive_flag) {
+      } else if (totalVoltage <= 8 && drive_flag) {
         driveSignal =
             new HolonomicDriveSignal(
                 slowTranslationalVelocity,
@@ -360,7 +360,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void aimRobot() {
     double Kp = -0.1;
     double min_command = 0.05;
-    double tx = limelight.getHorizontalOffset();
+    double tx = Limelight.getHorizontalOffset();
 
     double heading_error = -tx;
     double steering_adjust = 0.0;

@@ -2,8 +2,9 @@ package org.frcteam2910.c2020.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class limelight {
+public class Limelight implements Subsystem {
   public static NetworkTable mLime;
 
   public double limelightHeight = 29.75;
@@ -14,7 +15,7 @@ public class limelight {
 
   public double minCommand = 0.05;
 
-  public limelight() {
+  public Limelight() {
     mLime = NetworkTableInstance.getDefault().getTable("limelight");
   }
 

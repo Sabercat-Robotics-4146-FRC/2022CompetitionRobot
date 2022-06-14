@@ -20,13 +20,11 @@ public class RobotContainer {
   private final XboxController primaryController =
       new XboxController(Constants.PRIMARY_CONTROLLER_PORT);
 
-  private final XboxController secondaryController =
-      new XboxController(Constants.SECONDARY_CONTROLLER_PORT);
-
   private final Superstructure superstructure = new Superstructure();
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeAndIndexer intakeAndIndexer = new IntakeAndIndexer();
+  private final Flywheel flywheel = new Flywheel();
   private final EndLift endLift = new EndLift();
   private final CompressorClass compressorClass = new CompressorClass();
   private final Limelight limelight = new Limelight();
@@ -50,6 +48,7 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().registerSubsystem(drivetrainSubsystem);
     CommandScheduler.getInstance().registerSubsystem(intakeAndIndexer);
+    CommandScheduler.getInstance().registerSubsystem(flywheel);
     CommandScheduler.getInstance().registerSubsystem(endLift);
     CommandScheduler.getInstance().registerSubsystem(compressorClass);
     CommandScheduler.getInstance().registerSubsystem(limelight);
@@ -85,11 +84,11 @@ public class RobotContainer {
     .getBackButton()
     .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
 
-    primaryController
+    /* primaryController
         .getDPadButton(Direction.UP)
         .whileHeld(
             new BasicDriveCommand(
-                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
+                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false)); */
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
@@ -98,6 +97,10 @@ public class RobotContainer {
         if (getBatteryVoltage() <= 10) {
           drivetrainSubsystem.reduceCurrentDraw();
         }
+    });
+
+    primaryController.getBButton().whenReleased(() -> {
+      flywheel.toggleFlywheel();
     });
 
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
@@ -143,6 +146,10 @@ public class RobotContainer {
 
   public IntakeAndIndexer getIntakeAndIndexerSubsystem() {
     return intakeAndIndexer;
+  }
+
+  public Flywheel getFlywheelSubsystem() {
+    return flywheel;
   }
 
   public Superstructure getSuperstructure() {

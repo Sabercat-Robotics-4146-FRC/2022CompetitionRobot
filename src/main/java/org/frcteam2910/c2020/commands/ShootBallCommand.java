@@ -1,26 +1,25 @@
 package org.frcteam2910.c2020.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import org.frcteam2910.c2020.subsystems.IntakeAndIndexer;
+import org.frcteam2910.c2020.subsystems.Flywheel;
 
 public class ShootBallCommand extends CommandBase {
-  final IntakeAndIndexer intakeAndIndexer;
+  final Flywheel flywheel;
 
-  public ShootBallCommand(IntakeAndIndexer intakeAndIndexer) {
-    this.intakeAndIndexer = intakeAndIndexer;
 
-    addRequirements(intakeAndIndexer);
+  public ShootBallCommand(Flywheel flywheel) {
+    this.flywheel = flywheel;
+
+    addRequirements(flywheel);
   }
 
   @Override
   public void execute() {
-    intakeAndIndexer.indexerAlwaysOn();
-    intakeAndIndexer.loadTopBall();
-    // intakeAndIndexer.toggleFlywheel();
+    flywheel.toggleFlywheel(true);
   }
 
   @Override
   public void end(boolean interrupted) {
-    // intakeAndIndexer.toggleFlywheel();
+    flywheel.toggleFlywheel(false);
   }
 }

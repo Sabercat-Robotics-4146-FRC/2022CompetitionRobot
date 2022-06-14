@@ -58,7 +58,7 @@ public class AutonomousChooser {
   }
 
   private void shootAtTarget(SequentialCommandGroup command, RobotContainer container) {
-    command.addCommands(new ShootBallCommand(container.getIntakeAndIndexerSubsystem()));
+    command.addCommands(new ShootBallCommand(container.getFlywheelSubsystem()));
   }
 
   private void follow(

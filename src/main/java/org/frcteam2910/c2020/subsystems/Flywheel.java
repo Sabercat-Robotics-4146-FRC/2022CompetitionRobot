@@ -27,13 +27,21 @@ public class Flywheel implements Subsystem {
   public Flywheel() {
     kHood = .40;
 
-    flywheelLeader = new CANSparkMax(Constants.flywheelLeader, MotorType.kBrushless);
+    flywheelLeader = new CANSparkMax(Constants.FLYWHEEL_LEADER, MotorType.kBrushless);
     flywheelLeader.restoreFactoryDefaults();
-    flywheelfollower = new CANSparkMax(Constants.flywheelfollower, MotorType.kBrushless);
+    flywheelfollower = new CANSparkMax(Constants.FLYWHEEL_FOLLOWER, MotorType.kBrushless);
     flywheelfollower.restoreFactoryDefaults();
 
     flywheelLeader.setInverted(true);
     flywheelfollower.follow(flywheelLeader, true);
+
+    CANSparkMax[] motors = {flywheelLeader, flywheelfollower};
+    for (var motor : motors) {
+      motor.setSmartCurrentLimit(80); // current limit (amps)
+      motor.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
+      motor.enableVoltageCompensation(
+          12);
+    }
 
     m_pidController = flywheelLeader.getPIDController();
 
@@ -89,10 +97,18 @@ public class Flywheel implements Subsystem {
 
   public void toggleFlywheel() {
     flywheelToggle = !flywheelToggle;
-    if (flywheelToggle == false) {
-      flywheelLeader.stopMotor();
-    } else {
+    if (flywheelToggle) {
       m_pidController.setReference(1250, ControlType.kVelocity);
+    } else {
+      flywheelLeader.stopMotor();
+    }
+  }
+
+  public void toggleFlywheel(boolean on) {
+    if (on) {
+      m_pidController.setReference(1250, ControlType.kVelocity);
+    } else {
+      flywheelLeader.stopMotor();
     }
   }
 
