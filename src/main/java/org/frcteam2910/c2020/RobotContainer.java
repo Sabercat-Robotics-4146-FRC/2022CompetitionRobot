@@ -12,8 +12,8 @@ import org.frcteam2910.c2020.util.DriverReadout;
 import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.input.Axis;
-import org.frcteam2910.common.robot.input.DPadButton.Direction;
 import org.frcteam2910.common.robot.input.XboxController;
+import org.frcteam2910.common.robot.input.DPadButton.Direction;
 
 public class RobotContainer {
 
@@ -84,11 +84,11 @@ public class RobotContainer {
     .getBackButton()
     .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
 
-    /* primaryController
+    primaryController
         .getDPadButton(Direction.UP)
         .whileHeld(
             new BasicDriveCommand(
-                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false)); */
+                drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
