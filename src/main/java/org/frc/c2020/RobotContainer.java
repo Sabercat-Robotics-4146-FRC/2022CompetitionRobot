@@ -70,17 +70,6 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
 
-    // primaryController
-    //     .getRightJoystickButton()
-    //     .whileHeld(
-    //         new BasicDriveCommand(
-    //             drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
-
-    // primaryController.getAButton().whenPressed(
-    //         new BasicDriveCommand(drivetrainSubsystem, new Vector2(-0.5, 0.0), 0.0,
-    // false).withTimeout(0.3)
-    // );
-
     primaryController
     .getBackButton()
     .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
