@@ -1,12 +1,10 @@
 package org.frc.c2020.commands;
 
-import org.frc.c2020.subsystems.Flywheel;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import org.frc.c2020.subsystems.Flywheel;
 
 public class ShootBallCommand extends CommandBase {
   final Flywheel flywheel;
-
 
   public ShootBallCommand(Flywheel flywheel) {
     this.flywheel = flywheel;

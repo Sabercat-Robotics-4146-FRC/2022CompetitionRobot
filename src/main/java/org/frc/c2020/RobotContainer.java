@@ -71,8 +71,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     primaryController
-    .getBackButton()
-    .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
+        .getBackButton()
+        .whenPressed(() -> drivetrainSubsystem.resetGyroAngle(Rotation2.ZERO));
 
     primaryController
         .getDPadButton(Direction.UP)
@@ -82,16 +82,22 @@ public class RobotContainer {
 
     primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
-    primaryController.getBButton().whenPressed(() -> {
-        flywheel.toggleFlywheel();
-        if (getBatteryVoltage() <= 10) {
-          drivetrainSubsystem.reduceCurrentDraw();
-        }
-    });
+    primaryController
+        .getBButton()
+        .whenPressed(
+            () -> {
+              flywheel.toggleFlywheel();
+              if (getBatteryVoltage() <= 10) {
+                drivetrainSubsystem.reduceCurrentDraw();
+              }
+            });
 
-    primaryController.getBButton().whenReleased(() -> {
-      flywheel.toggleFlywheel();
-    });
+    primaryController
+        .getBButton()
+        .whenReleased(
+            () -> {
+              flywheel.toggleFlywheel();
+            });
 
     primaryController.getAButton().whenPressed(() -> intakeAndIndexer.toggleIntake());
 
