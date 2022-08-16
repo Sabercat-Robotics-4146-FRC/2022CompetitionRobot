@@ -3,12 +3,10 @@ package org.frc.c2020.subsystems;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import org.frc.c2020.Constants;
-
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.frc.c2020.Constants;
 
 public class Flywheel implements Subsystem {
 
@@ -41,8 +39,7 @@ public class Flywheel implements Subsystem {
     for (var motor : motors) {
       motor.setSmartCurrentLimit(80); // current limit (amps)
       motor.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
-      motor.enableVoltageCompensation(
-          12);
+      motor.enableVoltageCompensation(12);
     }
 
     m_pidController = flywheelLeader.getPIDController();

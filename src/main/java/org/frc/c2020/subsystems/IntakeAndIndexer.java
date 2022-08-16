@@ -55,8 +55,7 @@ public class IntakeAndIndexer implements Subsystem {
     for (var sparkMax : sparkMaxs) {
       sparkMax.setSmartCurrentLimit(80); // current limit (amps)
       sparkMax.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
-      sparkMax.enableVoltageCompensation(
-          12);
+      sparkMax.enableVoltageCompensation(12);
     }
   }
 
