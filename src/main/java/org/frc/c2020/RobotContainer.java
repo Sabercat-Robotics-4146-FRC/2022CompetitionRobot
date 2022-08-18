@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.frc.c2020.commands.*;
 import org.frc.c2020.subsystems.*;
@@ -86,6 +87,13 @@ public class RobotContainer {
         .getBButton()
         .whenPressed(
             () -> {
+              limelight.varyServos();
+              try {
+                TimeUnit.SECONDS.sleep(5);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+
               flywheel.toggleFlywheel();
               if (getBatteryVoltage() <= 10) {
                 drivetrainSubsystem.reduceCurrentDraw();
@@ -96,6 +104,13 @@ public class RobotContainer {
         .getBButton()
         .whenReleased(
             () -> {
+              limelight.varyServos();
+              try {
+                TimeUnit.SECONDS.sleep(5);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+
               flywheel.toggleFlywheel();
             });
 
@@ -147,6 +162,8 @@ public class RobotContainer {
   public Flywheel getFlywheelSubsystem() {
     return flywheel;
   }
+
+  public Limelight getLimelightSubsystem() { return limelight; }
 
   public Superstructure getSuperstructure() {
     return superstructure;
