@@ -96,7 +96,7 @@ public class Limelight implements Subsystem {
 
     double arcLength = circleRadius * Math.acos(1 - Math.pow(Math.sqrt(Math.pow(initx - finx, 2) + Math.pow(inity - finy, 2)) / circleRadius, 2)/2);
     double m = Math.tan(theta);
-    double extension = arcLength/ m / maxExtension  - ((finy * initx) / (finx + inity));
+    double extension = arcLength/ m / maxExtension  - Math.sqrt(initx*initx + inity*inity);
     SmartDashboard.putNumber("Extension", extension);
     //Scaled from 0 to 1, if outside this range, the shot is unobtainable at the current robot position
     return extension;
