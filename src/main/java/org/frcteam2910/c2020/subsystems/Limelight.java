@@ -46,7 +46,7 @@ public class Limelight implements Subsystem {
   }
 
   public double getVerticalOffset() {
-    return mLime.getEntry("ty").getDouble(0) - cameraAng;
+    return mLime.getEntry("ty").getDouble(0) + cameraAng;
   }
 
   public double adjustHeading() {
@@ -91,9 +91,7 @@ public class Limelight implements Subsystem {
   public double calculateServoPosition() {
     double theta = calculateShootingAngle();
 
-    // TODO: Roughly measured initial and final arc points from cad file, if performance is poor,
-    // remeasure these points
-
+    // TODO: Roughly measured initial and final arc points from cad file, remeasure if needed
     double circleRadius = 25 / 100.0;
     double initx = 21.5 / 100.0;
     double inity = 9.5 / 100.0;
