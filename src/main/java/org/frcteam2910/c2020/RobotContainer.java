@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import org.frcteam2910.c2020.commands.*;
 import org.frcteam2910.c2020.subsystems.*;
 import org.frcteam2910.c2020.util.AutonomousChooser;
@@ -80,35 +79,35 @@ public class RobotContainer {
             new BasicDriveCommand(
                 drivetrainSubsystem, new Vector2(0.0, 0.0), limelight.adjustHeading(), false));
 
-    primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
+    // primaryController.getBButton().whenPressed(() -> intakeAndIndexer.loadTopBall());
 
     primaryController
         .getBButton()
         .whenPressed(
             () -> {
-              limelight.varyServos();
-              try {
-                TimeUnit.SECONDS.sleep(5);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
+              // limelight.varyServos();
+              // try {
+              //   TimeUnit.SECONDS.sleep(0);
+              // } catch (InterruptedException e) {
+              //   e.printStackTrace();
+              // }
 
               flywheel.toggleFlywheel();
-              if (getBatteryVoltage() <= 10) {
-                drivetrainSubsystem.reduceCurrentDraw();
-              }
+              // if (getBatteryVoltage() <= 10) {
+              //   drivetrainSubsystem.reduceCurrentDraw();
+              // }
             });
 
     primaryController
         .getBButton()
         .whenReleased(
             () -> {
-              limelight.varyServos();
-              try {
-                TimeUnit.SECONDS.sleep(5);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
+              // limelight.varyServos();
+              // try {
+              //   TimeUnit.SECONDS.sleep(5);
+              // } catch (InterruptedException e) {
+              //   e.printStackTrace();
+              // }
 
               flywheel.toggleFlywheel();
             });

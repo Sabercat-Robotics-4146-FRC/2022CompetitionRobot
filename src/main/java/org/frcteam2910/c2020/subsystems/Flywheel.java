@@ -1,8 +1,8 @@
 package org.frcteam2910.c2020.subsystems;
 
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -29,18 +29,19 @@ public class Flywheel implements Subsystem {
 
     flywheelLeader = new CANSparkMax(Constants.FLYWHEEL_LEADER, MotorType.kBrushless);
     flywheelLeader.restoreFactoryDefaults();
+
     flywheelfollower = new CANSparkMax(Constants.FLYWHEEL_FOLLOWER, MotorType.kBrushless);
     flywheelfollower.restoreFactoryDefaults();
 
     flywheelLeader.setInverted(true);
     flywheelfollower.follow(flywheelLeader, true);
 
-    CANSparkMax[] motors = {flywheelLeader, flywheelfollower};
-    for (var motor : motors) {
-      motor.setSmartCurrentLimit(80); // current limit (amps)
-      motor.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
-      motor.enableVoltageCompensation(12);
-    }
+    // CANSparkMax[] motors = {flywheelLeader, flywheelfollower};
+    // for (var motor : motors) {
+    //   motor.setSmartCurrentLimit(80); // current limit (amps)
+    //   motor.setOpenLoopRampRate(.5); // # seconds to reach peak throttle
+    //   motor.enableVoltageCompensation(12);
+    // }
 
     m_pidController = flywheelLeader.getPIDController();
 
@@ -59,15 +60,13 @@ public class Flywheel implements Subsystem {
     servoLeft.set(kHood);
     */
 
-    kP = 45e-5;
+    kP = 0.0002;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = .0002;
+    kFF = 0.00016;
     kMaxOutput = 1;
     kMinOutput = -1;
-    maxRPM = 5874;
-    setPoint = 500;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
@@ -75,6 +74,9 @@ public class Flywheel implements Subsystem {
     m_pidController.setIZone(kIz);
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+
+    // flywheelLeader.burnFlash();
+    // flywheelfollower.burnFlash();
 
     SmartDashboard.putNumber("P Gain", kP);
     SmartDashboard.putNumber("I Gain", kI);
@@ -87,33 +89,24 @@ public class Flywheel implements Subsystem {
     flywheelToggle = false;
   }
 
-  double p = SmartDashboard.getNumber("P Gain", 0);
-  double i = SmartDashboard.getNumber("I Gain", 0);
-  double d = SmartDashboard.getNumber("D Gain", 0);
-  double iz = SmartDashboard.getNumber("I Zone", 0);
-  double ff = SmartDashboard.getNumber("Feed Forward", 0);
-  double max = SmartDashboard.getNumber("Max Output", 0);
-  double min = SmartDashboard.getNumber("Min Output", 0);
-
   public void toggleFlywheel() {
     flywheelToggle = !flywheelToggle;
-    if (flywheelToggle) {
-      m_pidController.setReference(1250, ControlType.kVelocity);
-    } else {
-      flywheelLeader.stopMotor();
-    }
   }
 
-  public void toggleFlywheel(boolean on) {
-    if (on) {
-      m_pidController.setReference(1250, ControlType.kVelocity);
-    } else {
-      flywheelLeader.stopMotor();
-    }
+  public void toggleFlywheel(boolean state) {
+    flywheelToggle = state;
   }
 
   @Override
   public void periodic() {
+    double p = SmartDashboard.getNumber("P Gain", 0);
+    double i = SmartDashboard.getNumber("I Gain", 0);
+    double d = SmartDashboard.getNumber("D Gain", 0);
+    double iz = SmartDashboard.getNumber("I Zone", 0);
+    double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    double max = SmartDashboard.getNumber("Max Output", 0);
+    double min = SmartDashboard.getNumber("Min Output", 0);
+
     if ((p != kP)) {
       m_pidController.setP(p);
       kP = p;
@@ -138,6 +131,13 @@ public class Flywheel implements Subsystem {
       m_pidController.setOutputRange(min, max);
       kMinOutput = min;
       kMaxOutput = max;
+    }
+
+    if (flywheelToggle) {
+      m_pidController.setReference(3000.0, CANSparkMax.ControlType.kVelocity);
+
+    } else {
+      flywheelLeader.stopMotor();
     }
 
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
