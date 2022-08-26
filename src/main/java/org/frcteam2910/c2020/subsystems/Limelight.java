@@ -19,7 +19,7 @@ public class Limelight implements Subsystem {
   public double targetHeight = 104 / 100.0;
 
   public double ballSpeed =
-      3; // TODO: Calculate the exit speed of the ball in meters per second, set this to said value.
+      7; // TODO: Recalculate if necessary
 
   public double Kp = -0.1;
 
