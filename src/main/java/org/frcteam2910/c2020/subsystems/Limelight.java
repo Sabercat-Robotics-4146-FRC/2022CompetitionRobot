@@ -19,14 +19,14 @@ public class Limelight implements Subsystem {
   public double targetHeight = 104 / 100.0;
 
   public double ballSpeed =
-      3; // TODO: Calculate the exit speed of the ball in meters per second, set this to said value.
+      7; // TODO: Calculate the exit speed of the ball in meters per second, set this to said value.
 
   public double Kp = -0.1;
 
   public double minCommand = 0.05;
 
   public double cameraAng =
-      10
+      20
           * (Math.PI
               / 180); // TODO: calculate the angle the limelight is at, set this to that angle.
 
@@ -128,5 +128,13 @@ public class Limelight implements Subsystem {
   public void varyServos(double ext) {
     servoLeft.set(ext);
     servoRight.set(ext);
+  }
+
+  public void periodic() {
+    if (getSeesTarget()) {
+      varyServos();
+    } else {
+      varyServos(0.5);
+    }
   }
 }

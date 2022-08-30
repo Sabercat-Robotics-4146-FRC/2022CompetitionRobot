@@ -85,7 +85,7 @@ public class RobotContainer {
         .getBButton()
         .whenPressed(
             () -> {
-              // limelight.varyServos();
+              limelight.varyServos();
               // try {
               //   TimeUnit.SECONDS.sleep(0);
               // } catch (InterruptedException e) {
@@ -102,7 +102,7 @@ public class RobotContainer {
         .getBButton()
         .whenReleased(
             () -> {
-              // limelight.varyServos();
+              limelight.varyServos();
               // try {
               //   TimeUnit.SECONDS.sleep(5);
               // } catch (InterruptedException e) {

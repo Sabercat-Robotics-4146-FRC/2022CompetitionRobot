@@ -60,13 +60,14 @@ public class Flywheel implements Subsystem {
     servoLeft.set(kHood);
     */
 
-    kP = 0.0002;
+    kP = 0.0004;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = 0.00016;
+    kFF = 0.000;
     kMaxOutput = 1;
     kMinOutput = -1;
+    setPoint = 4000;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
@@ -75,8 +76,8 @@ public class Flywheel implements Subsystem {
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-    // flywheelLeader.burnFlash();
-    // flywheelfollower.burnFlash();
+    flywheelLeader.burnFlash();
+    flywheelfollower.burnFlash();
 
     SmartDashboard.putNumber("P Gain", kP);
     SmartDashboard.putNumber("I Gain", kI);
@@ -85,6 +86,7 @@ public class Flywheel implements Subsystem {
     SmartDashboard.putNumber("Feed Forward", kFF);
     SmartDashboard.putNumber("Max Output", kMaxOutput);
     SmartDashboard.putNumber("Min Output", kMinOutput);
+    SmartDashboard.putNumber("Setpoint", setPoint);
 
     flywheelToggle = false;
   }
@@ -106,6 +108,7 @@ public class Flywheel implements Subsystem {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
+    double setPoint = SmartDashboard.getNumber("Setpoint", 0);
 
     if ((p != kP)) {
       m_pidController.setP(p);
@@ -134,7 +137,7 @@ public class Flywheel implements Subsystem {
     }
 
     if (flywheelToggle) {
-      m_pidController.setReference(3000.0, CANSparkMax.ControlType.kVelocity);
+      m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
 
     } else {
       flywheelLeader.stopMotor();
