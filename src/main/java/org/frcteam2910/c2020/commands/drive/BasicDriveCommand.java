@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frcteam2910.c2020.subsystems.DrivetrainSubsystem;
 import org.frcteam2910.common.math.Vector2;
 
+/*
+  Very simple drive command. Used in cases where we want to 
+  perform a simple translation and rotation
+*/
+
 public class BasicDriveCommand extends CommandBase {
   private final DrivetrainSubsystem drivetrain;
   private final Vector2 translation;

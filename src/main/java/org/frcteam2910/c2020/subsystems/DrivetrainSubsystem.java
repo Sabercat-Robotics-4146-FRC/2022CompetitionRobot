@@ -158,7 +158,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
         odometryYEntry = tab.add("Y", 0.0).withPosition(0, 1).withSize(1, 1).getEntry();
         odometryAngleEntry = tab.add("Angle", 0.0).withPosition(0, 2).withSize(1, 1).getEntry();
-        
+
         tab.addNumber(
                 "Trajectory X",
                 () -> {
@@ -196,22 +196,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         tab.addNumber("Average Velocity", this::getAverageAbsoluteValueVelocity);
     }
 
-    public RigidTransform2 getPose() {
-        return pose;
-    }
-
-    public HolonomicMotionProfiledTrajectoryFollower getFollower() {
-        return follower;
-    }
-
-    public Vector2 getVelocity() {
-        return velocity;
-    }
-
-    public double getAngularVelocity() {
-        return angularVelocity;
-    }
-
     public void drive(Vector2 translationalVelocity,
             double rotationalVelocity,
             boolean isFieldOriented) {
@@ -227,23 +211,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     public void resetGyroAngle(Rotation2 angle) {
         gyroscope.setAdjustmentAngle(gyroscope.getUnadjustedAngle().rotateBy(angle.inverse()));
-    }
-
-    public double getAverageAbsoluteValueVelocity() {
-        double averageVelocity = 0;
-        for (var module : modules) {
-            averageVelocity += Math.abs(module.getDriveVelocity());
-        }
-        return averageVelocity / 4;
-    }
-
-    public Vector2[] getModuleVelocities() {
-        Vector2[] velocities = new Vector2[modules.length];
-        for (int i = 0; i < modules.length; i++) {
-            velocities[i] = Vector2.fromAngle(Rotation2.fromRadians(modules[i].getSteerAngle()))
-                    .scale(modules[i].getDriveVelocity() * 39.37008);
-        }
-        return velocities;
     }
 
     private void updateOdometry(double time, double dt) {
@@ -321,5 +288,38 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
         // allows user to turn off drive functions completely
         drive_flag = SmartDashboard.getBoolean("Drive Flag", false);
+    }
+
+    public double getAverageAbsoluteValueVelocity() {
+        double averageVelocity = 0;
+        for (var module : modules) {
+            averageVelocity += Math.abs(module.getDriveVelocity());
+        }
+        return averageVelocity / 4;
+    }
+
+    public Vector2[] getModuleVelocities() {
+        Vector2[] velocities = new Vector2[modules.length];
+        for (int i = 0; i < modules.length; i++) {
+            velocities[i] = Vector2.fromAngle(Rotation2.fromRadians(modules[i].getSteerAngle()))
+                    .scale(modules[i].getDriveVelocity() * 39.37008);
+        }
+        return velocities;
+    }
+
+    public RigidTransform2 getPose() {
+        return pose;
+    }
+
+    public HolonomicMotionProfiledTrajectoryFollower getFollower() {
+        return follower;
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    public double getAngularVelocity() {
+        return angularVelocity;
     }
 }
