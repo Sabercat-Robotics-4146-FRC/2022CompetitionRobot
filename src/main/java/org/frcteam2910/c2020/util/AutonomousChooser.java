@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frcteam2910.c2020.RobotContainer;
-import org.frcteam2910.c2020.commands.FollowTrajectoryCommand;
-import org.frcteam2910.c2020.commands.ShootBallCommand;
+import org.frcteam2910.c2020.commands.drive.FollowTrajectoryCommand;
 import org.frcteam2910.common.control.Trajectory;
 import org.frcteam2910.common.math.RigidTransform2;
 import org.frcteam2910.common.math.Rotation2;
@@ -58,8 +57,8 @@ public class AutonomousChooser {
   }
 
   private void shootAtTarget(SequentialCommandGroup command, RobotContainer container) {
-    command.addCommands(
-        new ShootBallCommand(container.getFlywheelSubsystem(), container.getLimelightSubsystem()));
+    //command.addCommands(
+    //    new ShootBallCommand(container.getFlywheelSubsystem(), container.getLimelightSubsystem()));
   }
 
   private void follow(

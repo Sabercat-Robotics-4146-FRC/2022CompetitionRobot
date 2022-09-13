@@ -94,6 +94,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final NetworkTableEntry odometryYEntry;
   private final NetworkTableEntry odometryAngleEntry;
 
+
   public DrivetrainSubsystem() {
     SmartDashboard.putBoolean("Drive Flag", false);
     synchronized (sensorLock) {
@@ -160,11 +161,10 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
       talon.configPeakCurrentLimit(90); // max. current (amps)
       talon.configPeakCurrentDuration(
           5); // # milliseconds after peak reached before regulation starts
-      talon.configContinuousCurrentLimit(70); // continuous current (amps) after regluation
+      talon.configContinuousCurrentLimit(70); // continuous current (amps) after regulation
       talon.configOpenloopRamp(.5); // # seconds to reach peak throttle
-      // talon.configPeakOutputForward(.9); // value [0,1] to scale output
-      // talon.configPeakOutputReverse(-.9); // value [-1,0] to scale output
     }
+
 
     odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
     odometryYEntry = tab.add("Y", 0.0).withPosition(0, 1).withSize(1, 1).getEntry();
@@ -214,6 +214,10 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     }
   }
 
+  public HolonomicMotionProfiledTrajectoryFollower getFollower() {
+    return follower;
+  }
+
   public Vector2 getVelocity() {
     synchronized (kinematicsLock) {
       return velocity;
@@ -229,28 +233,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void drive(
       Vector2 translationalVelocity, double rotationalVelocity, boolean isFieldOriented) {
     synchronized (stateLock) {
-      Vector2 slowTranslationalVelocity =
-          new Vector2(translationalVelocity.x / 2, translationalVelocity.y / 2);
-
-      double totalVoltage = RobotController.getBatteryVoltage();
-
-      if (totalVoltage > 8 && drive_flag) {
-        driveSignal =
-            new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
-      } else if (totalVoltage <= 8 && drive_flag) {
-        driveSignal =
-            new HolonomicDriveSignal(
-                slowTranslationalVelocity,
-                rotationalVelocity,
-                isFieldOriented); // if voltage is too low, reduce translational velocity to prevent
-        // brownout
-      } else {
-        driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, isFieldOriented);
-      }
+      driveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity,isFieldOriented);
     }
   }
-
-  public void autoDrive() {}
 
   public void resetPose(RigidTransform2 pose) {
     synchronized (kinematicsLock) {
@@ -273,15 +258,17 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     return averageVelocity / 4;
   }
 
-  private void updateOdometry(double time, double dt) {
-    Vector2[] moduleVelocities = new Vector2[modules.length];
+  public Vector2[] getModuleVelocities() {
+    Vector2[] velocities = new Vector2[modules.length];
     for (int i = 0; i < modules.length; i++) {
-      var module = modules[i];
-
-      moduleVelocities[i] =
-          Vector2.fromAngle(Rotation2.fromRadians(module.getSteerAngle()))
-              .scale(module.getDriveVelocity() * 39.37008);
+      velocities[i] = Vector2.fromAngle(Rotation2.fromRadians(modules[i].getSteerAngle()))
+              .scale(modules[i].getDriveVelocity() * 39.37008);
     }
+    return velocities;
+  }
+
+  private void updateOdometry(double time, double dt) {
+    Vector2[] moduleVelocities = getModuleVelocities();
 
     Rotation2 angle;
     double angularVelocity;
@@ -294,15 +281,29 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     synchronized (kinematicsLock) {
       this.pose = swerveOdometry.update(angle, dt, moduleVelocities);
+
+      /*
+      I think it should be simple to observe that this limits the length of the latency compensation map treating it like a queue.
+      My guess is that the reason for the limit is to limit strain on
+       the computer's computational resources
+       */
       if (latencyCompensationMap.size() > MAX_LATENCY_COMPENSATION_MAP_ENTRIES) {
         latencyCompensationMap.remove(latencyCompensationMap.firstKey());
       }
+      /*Adding timestamps and corresponding pose to map, as well as updating velocity and angular velocity based on the
+      motor velocities.
+      */
       latencyCompensationMap.put(new InterpolatingDouble(time), pose);
       this.velocity = velocity.getTranslationalVelocity();
       this.angularVelocity = angularVelocity;
     }
   }
 
+  /*
+  The chassis velocity is rotated inversely to the angle of the robot
+  when it is field rotated to account for the robot's direction on the field. When it is not field oriented, this
+  does not occur
+   */
   private void updateModules(HolonomicDriveSignal driveSignal, double dt) {
     ChassisVelocity chassisVelocity;
     if (driveSignal == null) {
@@ -321,10 +322,15 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     SwerveKinematics.normalizeModuleVelocities(moduleOutputs, 1);
     for (int i = 0; i < moduleOutputs.length; i++) {
       var module = modules[i];
+      //As maximum velocity is normalized to 1, the maximum voltage passed to a module is 12 Volts.
       module.set(moduleOutputs[i].length * 12.0, moduleOutputs[i].getAngle().toRadians());
     }
   }
 
+  /*
+  Note, latencyCompensationMap allows for a linear interpolation to predict the Pose at a given time.
+  As it is linear, the accuracy is questionable depending on sampling rate of the path of the robot.
+   */
   public RigidTransform2 getPoseAtTime(double timestamp) {
     synchronized (kinematicsLock) {
       if (latencyCompensationMap.isEmpty()) {
@@ -343,11 +349,17 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
     if (trajectorySignal.isPresent()) {
       driveSignal = trajectorySignal.get();
-      driveSignal =
-          new HolonomicDriveSignal(
-              driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage())),
-              driveSignal.getRotation() / (RobotController.getBatteryVoltage()),
-              driveSignal.isFieldOriented());
+      driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(),
+              driveSignal.getRotation(), driveSignal.isFieldOriented());
+          //new HolonomicDriveSignal(
+          //    driveSignal.getTranslation().scale(1.0 / (RobotController.getBatteryVoltage())),
+          //    driveSignal.getRotation() / (RobotController.getBatteryVoltage()),
+          //    driveSignal.isFieldOriented());
+          /*
+          The commented code scales the values in relation to the robot's current battery level.
+          This may be necessary, but, I think it should be tested before adding in battery level dampening
+           */
+
     } else {
       synchronized (stateLock) {
         driveSignal = this.driveSignal;
@@ -357,40 +369,12 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     updateModules(driveSignal, dt);
   }
 
-  public void aimRobot() {
-    double Kp = -0.1;
-    double min_command = 0.05;
-    double tx = Limelight.getHorizontalOffset();
-
-    double heading_error = -tx;
-    double steering_adjust = 0.0;
-    if (tx > 1.0) {
-      steering_adjust = Kp * heading_error - min_command;
-    } else if (tx < 1.0) {
-      steering_adjust = Kp * heading_error + min_command;
-    }
-
-    drive(new Vector2(0, 0), steering_adjust, true);
-  }
-
   @Override
   public void periodic() {
     RigidTransform2 pose = getPose();
     odometryXEntry.setDouble(pose.translation.x);
     odometryYEntry.setDouble(pose.translation.y);
     odometryAngleEntry.setDouble(getPose().rotation.toDegrees());
-
     drive_flag = SmartDashboard.getBoolean("Drive Flag", false);
-  }
-
-  public HolonomicMotionProfiledTrajectoryFollower getFollower() {
-    return follower;
-  }
-
-  public void reduceCurrentDraw() {
-    for (var talon : talons) {
-      talon.configPeakOutputForward(.7); // value [0,1] to scale output
-      talon.configPeakOutputReverse(-.7); // value [-1,0] to scale output
-    }
   }
 }
