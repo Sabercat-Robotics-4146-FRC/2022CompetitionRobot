@@ -58,17 +58,17 @@ public class IntakeAndIndexer implements Subsystem {
   }
 
   public void indexerAlwaysOn() {
-    if (indexerTopSensor.get() == true) {
-      indexerBottom.setVoltage(4);
-      indexerTop.setVoltage(4);
-    } else if (indexerTopSensor.get() == false && indexerBottomSensor.get() == true) {
-      indexerBottom.setVoltage(4);
-      indexerTop.stopMotor();
-      ;
-    } else {
-      indexerBottom.stopMotor();
-      indexerTop.stopMotor();
-    }
+    // if (indexerTopSensor.get() == true) {
+    indexerBottom.setVoltage(4);
+    indexerTop.setVoltage(4);
+    // } else if (indexerTopSensor.get() == false && indexerBottomSensor.get() == true) {
+    //  indexerBottom.setVoltage(4);
+    //  indexerTop.stopMotor();
+    //  ;
+    // } else {
+    //  indexerBottom.stopMotor();
+    //  indexerTop.stopMotor();
+    // }
   }
 
   public void indexerOff() {

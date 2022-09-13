@@ -356,7 +356,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     updateModules(driveSignal, dt);
   }
-
+  /*
   public void aimRobot() {
     double Kp = -0.1;
     double min_command = 0.05;
@@ -372,6 +372,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
     drive(new Vector2(0, 0), steering_adjust, true);
   }
+  */
 
   @Override
   public void periodic() {

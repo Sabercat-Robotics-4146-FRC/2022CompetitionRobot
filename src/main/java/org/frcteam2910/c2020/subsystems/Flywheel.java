@@ -3,7 +3,6 @@ package org.frcteam2910.c2020.subsystems;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.frcteam2910.c2020.Constants;
@@ -20,8 +19,6 @@ public class Flywheel implements Subsystem {
 
   private boolean flywheelToggle;
 
-  private Servo servoLeft;
-  private Servo servoRight;
   private double kHood;
 
   public Flywheel() {
@@ -60,14 +57,14 @@ public class Flywheel implements Subsystem {
     servoLeft.set(kHood);
     */
 
-    kP = 0.0004;
-    kI = 0;
+    kP = 0.00002;
+    kI = 0.00000007;
     kD = 0;
     kIz = 0;
     kFF = 0.000;
     kMaxOutput = 1;
     kMinOutput = -1;
-    setPoint = 4000;
+    setPoint = 2000;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
