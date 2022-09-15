@@ -10,7 +10,7 @@ public class LoadballCommand extends SequentialCommandGroup {
     public LoadballCommand (Indexer indexer) {
         addCommands(
             new ToggleIndexerCommand(indexer, true), 
-            new WaitCommand(5.0), //TODO: Determine time
+            new WaitCommand(3.0), //TODO: Determine time
             new ToggleIndexerCommand(indexer, false)
         );
     }
