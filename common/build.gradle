@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 allprojects {
-    group = 'org.frcteam2910.common'
+    group = 'org.frcteam4146.common'
     version = '2020.0.0'
 
     repositories {

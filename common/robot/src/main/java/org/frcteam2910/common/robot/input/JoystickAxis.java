@@ -1,4 +1,4 @@
-package org.frcteam2910.common.robot.input;
+package org.frcteam4146.common.robot.input;
 
 import edu.wpi.first.wpilibj.Joystick;
 

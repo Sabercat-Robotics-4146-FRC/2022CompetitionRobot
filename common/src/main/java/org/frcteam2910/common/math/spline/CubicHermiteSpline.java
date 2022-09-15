@@ -1,8 +1,8 @@
-package org.frcteam2910.common.math.spline;
+package org.frcteam4146.common.math.spline;
 
 import org.ejml.simple.SimpleMatrix;
-import org.frcteam2910.common.math.Rotation2;
-import org.frcteam2910.common.math.Vector2;
+import org.frcteam4146.common.math.Rotation2;
+import org.frcteam4146.common.math.Vector2;
 
 public class CubicHermiteSpline extends Spline {
     private static final SimpleMatrix BASIS_MATRIX = new SimpleMatrix(new double[][]{

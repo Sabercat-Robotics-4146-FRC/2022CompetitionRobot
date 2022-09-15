@@ -1,7 +1,7 @@
-package org.frcteam2910.common.robot.input;
+package org.frcteam4146.common.robot.input;
 
 import edu.wpi.first.wpilibj2.command.button.Button;
-import org.frcteam2910.common.robot.Utilities;
+import org.frcteam4146.common.robot.Utilities;
 
 public abstract class Axis {
 	public static final double DEADBAND = 0.025;

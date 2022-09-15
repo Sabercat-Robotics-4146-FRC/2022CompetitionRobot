@@ -1,7 +1,7 @@
-package org.frcteam2910.common.kinematics;
+package org.frcteam4146.common.kinematics;
 
 import org.ejml.simple.SimpleMatrix;
-import org.frcteam2910.common.math.Vector2;
+import org.frcteam4146.common.math.Vector2;
 
 import java.util.Arrays;
 

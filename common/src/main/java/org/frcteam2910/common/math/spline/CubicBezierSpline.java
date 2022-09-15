@@ -1,7 +1,7 @@
-package org.frcteam2910.common.math.spline;
+package org.frcteam4146.common.math.spline;
 
 import org.ejml.simple.SimpleMatrix;
-import org.frcteam2910.common.math.Vector2;
+import org.frcteam4146.common.math.Vector2;
 
 public final class CubicBezierSpline extends Spline {
     private static final SimpleMatrix BASIS_MATRIX = BezierSplineHelper.createBasisMatrix(3);

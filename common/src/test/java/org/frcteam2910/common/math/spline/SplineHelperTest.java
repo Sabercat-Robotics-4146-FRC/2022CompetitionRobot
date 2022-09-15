@@ -1,8 +1,8 @@
-package org.frcteam2910.common.math.spline;
+package org.frcteam4146.common.math.spline;
 
 import org.junit.Test;
 
-import static org.frcteam2910.common.math.spline.SplineHelper.binomial;
+import static org.frcteam4146.common.math.spline.SplineHelper.binomial;
 import static org.junit.Assert.assertEquals;
 
 public class SplineHelperTest {

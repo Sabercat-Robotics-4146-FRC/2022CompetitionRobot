@@ -1,4 +1,4 @@
-package org.frcteam2910.common.motion;
+package org.frcteam4146.common.motion;
 
 import java.io.Serializable;
 

@@ -1,8 +1,8 @@
-package org.frcteam2910.common.math;
+package org.frcteam4146.common.math;
 
 import org.junit.Test;
 
-import static org.frcteam2910.common.math.MathUtils.EPSILON;
+import static org.frcteam4146.common.math.MathUtils.EPSILON;
 import static org.junit.Assert.assertEquals;
 
 public class Vector2Test {

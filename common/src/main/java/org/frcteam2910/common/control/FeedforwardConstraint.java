@@ -1,4 +1,4 @@
-package org.frcteam2910.common.control;
+package org.frcteam4146.common.control;
 
 /**
  * Constrain both the velocity and acceleration based on the equation <code>F = K<sub>V</sub>*V + K<sub>A</sub>*A</code>.

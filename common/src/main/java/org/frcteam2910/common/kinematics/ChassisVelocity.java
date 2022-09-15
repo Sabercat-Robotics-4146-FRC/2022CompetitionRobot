@@ -1,6 +1,6 @@
-package org.frcteam2910.common.kinematics;
+package org.frcteam4146.common.kinematics;
 
-import org.frcteam2910.common.math.Vector2;
+import org.frcteam4146.common.math.Vector2;
 
 /**
  * Represents the velocity of a robot chassis w.r.t. the robot frame of reference.

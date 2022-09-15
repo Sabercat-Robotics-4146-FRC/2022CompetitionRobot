@@ -1,8 +1,8 @@
-package org.frcteam2910.common.math;
+package org.frcteam4146.common.math;
 
 import org.junit.Test;
 
-import static org.frcteam2910.common.math.MathUtils.*;
+import static org.frcteam4146.common.math.MathUtils.*;
 import static org.junit.Assert.*;
 
 public class MathUtilsTest {

@@ -1,7 +1,7 @@
-package org.frcteam2910.common.math.spline;
+package org.frcteam4146.common.math.spline;
 
-import org.frcteam2910.common.math.Rotation2;
-import org.frcteam2910.common.math.Vector2;
+import org.frcteam4146.common.math.Rotation2;
+import org.frcteam4146.common.math.Vector2;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -1,6 +1,6 @@
-package org.frcteam2910.common.drivers;
+package org.frcteam4146.common.drivers;
 
-import org.frcteam2910.common.math.Rotation2;
+import org.frcteam4146.common.math.Rotation2;
 
 public final class MockGyroscope extends Gyroscope {
 	private Rotation2 unadjustedAngle;

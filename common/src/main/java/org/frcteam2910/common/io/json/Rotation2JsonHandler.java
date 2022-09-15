@@ -1,7 +1,7 @@
-package org.frcteam2910.common.io.json;
+package org.frcteam4146.common.io.json;
 
 import com.google.gson.*;
-import org.frcteam2910.common.math.Rotation2;
+import org.frcteam4146.common.math.Rotation2;
 
 import java.lang.reflect.Type;
 
