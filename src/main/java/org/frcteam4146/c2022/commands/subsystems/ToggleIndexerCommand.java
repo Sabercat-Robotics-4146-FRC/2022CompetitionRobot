@@ -1,4 +1,4 @@
-package org.frcteam4146.c2022.commands;
+package org.frcteam4146.c2022.commands.subsystems;
 
 import org.frcteam4146.c2022.subsystems.Indexer;
 
@@ -11,15 +11,8 @@ public class ToggleIndexerCommand extends CommandBase {
         this.indexer = indexer;
         this.state = state;
     }
-
     @Override
     public void initialize() {
         indexer.toggleIndexer(state);
-    }
-
-    @Override
-    public boolean isFinished() {
-        // TODO Auto-generated method stub
-        return true;
     }
 }
