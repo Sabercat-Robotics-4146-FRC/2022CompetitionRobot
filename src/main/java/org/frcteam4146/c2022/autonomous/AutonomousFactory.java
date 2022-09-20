@@ -34,7 +34,7 @@ public class AutonomousFactory {
 
     for (File f : files) {
 
-        if (f.isFile()) {
+      if (f.isFile()) {
         Trajectory trajectory;
 
         try {

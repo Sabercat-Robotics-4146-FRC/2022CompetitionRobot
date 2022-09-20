@@ -1,6 +1,7 @@
 package org.frcteam4146.c2022;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.frcteam4146.c2022.commands.commandGroups.LoadBallCommand;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
@@ -35,8 +36,8 @@ public class RobotContainer {
             drivetrainSubsystem,
             new DriveCommand(
                 drivetrainSubsystem,
-                primaryController.getLeftXAxis(),
                 primaryController.getLeftYAxis(),
+                primaryController.getLeftXAxis(),
                 primaryController.getRightXAxis()));
 
     configureButtonBindings();
@@ -45,9 +46,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Configure Button Bindings
     primaryController.getBButton().whenPressed(new ShootBallCommand(limelight, flywheel, indexer));
-    primaryController.getAButton().whenPressed(new ToggleLimelightTrackingCommand(limelight));
+    primaryController.getAButton().whenPressed(new ToggleLimelightTrackingCommand(limelight, true));
     primaryController.getXButton().whenPressed(new AimRobotCommand(drivetrainSubsystem, limelight));
-
+    // test
+    primaryController.getYButton().whenPressed(new LoadBallCommand(indexer));
   }
 
   // public Command getAutonomousCommand() {
@@ -57,9 +59,20 @@ public class RobotContainer {
   public DrivetrainSubsystem getDrivetrainSubsystem() {
     return drivetrainSubsystem;
   }
-  public Flywheel getFlywheelSubsystem()  {return flywheel;}
-  public Indexer getIndexerSubsystem() {return indexer;}
-  public Servos getServosSubsystem() {return servos;}
-  public Limelight getLimelightSubsystem() {return limelight;}
 
+  public Flywheel getFlywheelSubsystem() {
+    return flywheel;
+  }
+
+  public Indexer getIndexerSubsystem() {
+    return indexer;
+  }
+
+  public Servos getServosSubsystem() {
+    return servos;
+  }
+
+  public Limelight getLimelightSubsystem() {
+    return limelight;
+  }
 }

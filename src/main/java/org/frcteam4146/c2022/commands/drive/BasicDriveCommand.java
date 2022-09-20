@@ -5,7 +5,7 @@ import org.frcteam4146.c2022.subsystems.DrivetrainSubsystem;
 import org.frcteam4146.common.math.Vector2;
 
 /*
-  Very simple drive command. Used in cases where we want to 
+  Very simple drive command. Used in cases where we want to
   perform a simple translation and rotation
 */
 
