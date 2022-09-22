@@ -17,6 +17,10 @@ public class Limelight implements Subsystem {
   public Servos servos;
 
   public boolean tracking = true;
+  public boolean aiming = false;
+
+  public double pastRotationSpeed = 0;
+  public double rotationSpeed = 0;
 
   public Limelight(Servos servos) {
 
@@ -45,6 +49,10 @@ public class Limelight implements Subsystem {
     return (targetHeight - limelightHeight) / Math.tan(verticalOffset);
   }
 
+  public double getNewRotation() {
+    return rotationSpeed;
+  }
+
   public double calculateShootingAngle() {
     double g = 9.81;
     double x = getDistanceFromTarget();
@@ -70,6 +78,38 @@ public class Limelight implements Subsystem {
     tracking = state;
   }
 
+  public void toggleAiming(boolean state) {
+    aiming = state;
+  }
+
+  public void calculateRotation() {
+    /*TODO: Find out which direction is negative and which is positive from limelight
+     This may be more than what is necessary. I considered just doing an inverse kinematics for
+     the wheel velocity, but, this allows for time to be ignored, which is not possible with
+     inverse kinematics.
+    */
+    rotationSpeed = 0;
+    double min = 0.05;
+    double max = 0.25;
+    if (getSeesTarget()) {
+      double horizontal_angle = -getHorizontalOffset();
+      if (!(Math.abs(horizontal_angle) <= 0.03)) {
+        rotationSpeed =
+            (max - min) * (Math.pow((horizontal_angle / 27), 2))
+                + min; // Max angle, I think it is 27
+        rotationSpeed = Math.copySign(rotationSpeed, horizontal_angle);
+        // I think 1 is the upper bound for rotational speed, hence, if not, scaling, and ceiling is
+        // unnecessary
+      }
+    } else {
+      rotationSpeed = 1.5 * max;
+    }
+    if (Math.abs((rotationSpeed - pastRotationSpeed) / (pastRotationSpeed)) >= 0.1) {
+      rotationSpeed += (0.25) * (pastRotationSpeed - rotationSpeed);
+    }
+    pastRotationSpeed = rotationSpeed;
+  }
+
   @Override
   public void periodic() {
 
@@ -86,6 +126,10 @@ public class Limelight implements Subsystem {
         System.out.println("Cannot see target");
         servos.setServos(0.5);
       }
+    }
+
+    if(aiming) {
+      calculateRotation();
     }
   }
 }

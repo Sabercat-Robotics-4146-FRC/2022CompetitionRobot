@@ -29,6 +29,12 @@ import org.frcteam4146.common.util.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public boolean drive_flag;
+
+  /*
+    This value is used to turn the robot back to its initialPosition
+  */
+  public double returnAngle;
+
   public static final double TRACKWIDTH = 24.0;
   public static final double WHEELBASE = 24.0;
 
