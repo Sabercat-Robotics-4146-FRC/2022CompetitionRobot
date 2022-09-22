@@ -11,6 +11,12 @@ public class AimRobotCommand extends CommandBase {
 
   private double initialRotationPos = 0;
 
+  private double min = 0;
+  private double max = 0.25;
+
+  private double rotationSpeed = 0;
+  private double pastRotationSpeed = 0;
+
   public AimRobotCommand(DrivetrainSubsystem drivetrainSubsystem, Limelight limelight) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.limelight = limelight;
@@ -22,15 +28,14 @@ public class AimRobotCommand extends CommandBase {
   public void initialize() {
       // TODO Auto-generated method stub
       initialRotationPos = drivetrainSubsystem.getPose().rotation.toRadians();
-      limelight.toggleAiming(true);
-      limelight.pastRotationSpeed = 0;
   }
 
   @Override
   public void execute() {
-    double rotationSpeed = limelight.getNewRotation();
+    rotationSpeed = limelight.calculateRotation(min, max, pastRotationSpeed);
+    pastRotationSpeed = rotationSpeed;
 
-    if (rotationSpeed < -2 * 0.25 || rotationSpeed > 2 * 0.25)
+    if (Math.abs(rotationSpeed) > 2*max)
       end(true); // This should never happen, but, is a safety measure
 
     drivetrainSubsystem.drive(Vector2.ZERO, rotationSpeed, false);
