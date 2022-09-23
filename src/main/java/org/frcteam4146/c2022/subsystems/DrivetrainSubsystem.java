@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import java.util.ArrayList;
 import java.util.Optional;
 import org.frcteam4146.c2022.Constants;
 import org.frcteam4146.c2022.Pigeon;
@@ -33,7 +35,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   /*
     This value is used to turn the robot back to its initialPosition
   */
-  public double returnAngle;
+  public ArrayList<Double> speeds;
 
   public static final double TRACKWIDTH = 24.0;
   public static final double WHEELBASE = 24.0;

@@ -1,5 +1,7 @@
 package org.frcteam4146.c2022.commands.drive;
 
+import java.util.ArrayList;
+
 import org.frcteam4146.c2022.subsystems.DrivetrainSubsystem;
 import org.frcteam4146.common.math.Vector2;
 
@@ -9,8 +11,7 @@ public class ReturnRobotCommand extends CommandBase {
     
     DrivetrainSubsystem drivetrain;
 
-    double rotation;
-
+    ArrayList<Double> speeds;
     double rotationSpeed = 0;
 
     public ReturnRobotCommand(DrivetrainSubsystem drivetrain) {
@@ -19,19 +20,19 @@ public class ReturnRobotCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        rotation = drivetrain.returnAngle;
+        speeds = drivetrain.speeds;
     }
 
     @Override
     public void execute() {
-        double currentPosition = drivetrain.getPose().rotation.toDegrees();
+        if(speeds.size() == 0) {end(true);}
+        rotationSpeed = -speeds.remove(0);
 
-        drivetrain.drive(Vector2.ZERO, 0, false);
+        drivetrain.drive(Vector2.ZERO, rotationSpeed, false);
     }
 
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
+        drivetrain.drive(Vector2.ZERO, rotationSpeed, false);
     }
 }
