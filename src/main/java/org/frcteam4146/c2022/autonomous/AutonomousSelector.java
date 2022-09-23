@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +63,26 @@ public class AutonomousSelector {
 
     public Command getCommand() {
         AutonomousFactory auto = new AutonomousFactory(container);
-        Command command = auto.createPath(pathChooser.getSelected()); // creates path command
-
+        SequentialCommandGroup command = new SequentialCommandGroup() {
+            @Override
+            public void end(boolean interrupted) {
+                // TODO Auto-generated method stub
+                if(interrupted) {
+                    addCommands(
+                        auto.toggleSubsystems(false)
+                        // just in case the subsystems are still toggled when the
+                        // autonomous period ends.
+                    );
+                }
+            }
+        };
+        
+        command.addCommands(
+            auto.toggleSubsystems(true),
+            auto.createPath(pathChooser.getSelected()), // creates path command
+            auto.toggleSubsystems(false)
+        );
+        
         return command;
     }
 }

@@ -9,6 +9,7 @@ import org.frcteam4146.c2022.RobotContainer;
 import org.frcteam4146.c2022.commands.commandGroups.LoadBallCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.FollowTrajectoryCommand;
+import org.frcteam4146.c2022.commands.drive.ReturnRobotCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleFlywheelCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeExtensionCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeMotorCommand;
@@ -82,7 +83,7 @@ public class AutonomousFactory {
                         path, // read JSON file and convert to Path
                         new TrajectoryConstraint[0], // N/A
                         0); // TODO: I dont know what this is; we need to know this though. 
-
+                    
                     command.addCommands(
                         createAutoCommand(trajectory, f, ball, shoot)
                     );
@@ -113,7 +114,7 @@ public class AutonomousFactory {
         
         if(ball) {
             command.addCommands(
-                new WaitCommand(0.5) // allow the intake to fully retrieve the ball. this number may change.
+                new WaitCommand(0.5) // allow the intake to fully intake the ball. this number may change.
             );
         }
 
@@ -123,8 +124,8 @@ public class AutonomousFactory {
                     container.getDrivetrainSubsystem(),
                     container.getLimelightSubsystem()),
                 new LoadBallCommand(
-                    container.getIndexerSubsystem())
-                /* turn back to original position */
+                    container.getIndexerSubsystem()),
+                new ReturnRobotCommand(container.getDrivetrainSubsystem())
             );
         }
         // TODO: add commands
