@@ -22,4 +22,8 @@ public class ToggleFlywheelCommand extends CommandBase {
     // TODO Auto-generated method stub
     return true;
   }
+  @Override
+  public void end(boolean interrupted) {
+    flywheel.toggleFlywheel(false);
+  }
 }

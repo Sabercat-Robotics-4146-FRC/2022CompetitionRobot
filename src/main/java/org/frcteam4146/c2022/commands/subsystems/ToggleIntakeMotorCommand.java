@@ -22,4 +22,8 @@ public class ToggleIntakeMotorCommand extends CommandBase {
     // TODO Auto-generated method stub
     return true;
   }
+  @Override
+  public void end(boolean interrupted) {
+    intake.toggleIntake(false);
+  }
 }
