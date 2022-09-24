@@ -9,10 +9,10 @@ public class Limelight implements Subsystem {
   public static NetworkTable mLime;
 
   public double limelightHeight = 29.75 / 100.0;
-  public double targetHeight = 104 / 100.0 + 0.2;
-  public double ballSpeed = 8; // TODO: Recalculate if necessary
+  public double targetHeight = 104 / 100.0;
+  public double ballSpeed = 4.75; // TODO: Recalculate if necessary
   public double cameraAng =
-      20; // TODO: calculate the angle the limelight is at, set this to that angle.
+      50; // TODO: calculate the angle the limelight is at, set this to that angle.
 
   public Servos servos;
 

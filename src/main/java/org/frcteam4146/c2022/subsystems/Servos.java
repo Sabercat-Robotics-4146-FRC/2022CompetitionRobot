@@ -47,18 +47,21 @@ public class Servos implements Subsystem {
   public double computePosition(double angle) {
     // TODO: Roughly measured initial and final arc points from cad file, remeasure if needed
     double radius = .25;
-    double px = .345;
-    double py = -0.04;
-    double len = 0.22;
-    double maxExt = 0.15;
+    double px = .36;
+    double py = 0.07;
+    double len = 0.21;
+    double maxExt = 0.17;
 
     double m = Math.tan(angle);
     double x = Math.sqrt(radius * radius / (1 + m * m));
     double y = m * x;
+    SmartDashboard.putNumber("y", y);
+    SmartDashboard.putNumber("x", x);
 
-    double dist = Math.sqrt((x - px) * (x - px) + (py + y) * (py + y));
+    double dist = Math.sqrt((x - px) * (x - px) + (py - y) * (py - y));
+    SmartDashboard.putNumber("dist", dist);
     double ext = dist - len;
-    double scaled_val = ext / maxExt;
+    double scaled_val = 1 - ext / maxExt + 0.2;
 
     SmartDashboard.putNumber("Desired Extension", scaled_val);
     // Scaled from 0 to 1, if outside this range, the shot is unobtainable at the current robot
