@@ -39,7 +39,7 @@ public class Flywheel implements Subsystem {
     kFF = 0.000;
     kMaxOutput = 1;
     kMinOutput = -1;
-    setPoint = 5000;
+    setPoint = 2500;
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);

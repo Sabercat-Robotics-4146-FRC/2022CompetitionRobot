@@ -3,7 +3,6 @@ package org.frcteam4146.c2022;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import org.frcteam4146.common.math.RigidTransform2;
 import org.frcteam4146.common.robot.UpdateManager;
 
@@ -37,7 +36,7 @@ public class Robot extends TimedRobot {
 
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    if(autonomousCommand != null) {
+    if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
   }
@@ -53,7 +52,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if(autonomousCommand!=null) {
+    if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
   }

@@ -1,9 +1,8 @@
 package org.frcteam4146.c2022.commands.drive;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import java.util.ArrayList;
-
 import org.frcteam4146.c2022.subsystems.DrivetrainSubsystem;
 import org.frcteam4146.c2022.subsystems.Limelight;
 import org.frcteam4146.common.math.Vector2;
@@ -33,10 +32,12 @@ public class AimRobotCommand extends CommandBase {
     speeds.add(rotationSpeed);
     pastRotationSpeed = rotationSpeed;
 
-    if (Math.abs(rotationSpeed) > 2*max)
+    if (Math.abs(rotationSpeed) > 2 * max)
       end(true); // This should never happen, but, is a safety measure
+    SmartDashboard.putNumber("Calculated rotation speed", rotationSpeed);
+    System.out.println(speeds);
 
-    drivetrainSubsystem.drive(Vector2.ZERO, rotationSpeed, false);
+    // drivetrainSubsystem.drive(Vector2.ZERO, rotationSpeed, false);
   }
 
   @Override

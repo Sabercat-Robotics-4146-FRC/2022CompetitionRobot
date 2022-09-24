@@ -8,7 +8,7 @@ public class Servos implements Subsystem {
   private Servo servoRight;
   private Servo servoLeft;
 
-  private double setpoint;
+  private double setpoint = 0.2;
 
   public Servos() {
     servoLeft = new Servo(0);
@@ -17,25 +17,26 @@ public class Servos implements Subsystem {
     servoRight.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
     servoRight.setSpeed(1.0); // to open
     servoRight.setSpeed(-1.0); // to close
-    servoRight.set(0.5);
+    servoRight.set(setpoint);
     servoLeft.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
     servoLeft.setSpeed(1.0); // to open
     servoLeft.setSpeed(-1.0); // to close
-    servoLeft.set(0.5);
-    setpoint = 0.5;
+    servoLeft.set(setpoint);
   }
 
   public void setPosition(double pos) {
-    if (0 <= pos && pos <= 1) {
+    if (0.2 <= pos && pos <= 1) {
       if (Math.abs(pos - setpoint) >= 0.01) { // Hedge against jitter
-        servoLeft.set(pos);
-        servoRight.set(pos);
+        servoLeft.setPosition(pos);
+        servoRight.setPosition(pos);
         setpoint = pos;
       }
-    } else {
-      servoLeft.set(0.5);
-      servoRight.setPosition(0.5);
     }
+    // else {
+    //  SmartDashboard.putBoolean("Flag", true);
+    //  servoLeft.set(0.2);
+    //  servoRight.set(0.2);
+    // }
   }
 
   public void setServos(double angle) {
@@ -57,7 +58,7 @@ public class Servos implements Subsystem {
 
     double dist = Math.sqrt((x - px) * (x - px) + (py + y) * (py + y));
     double ext = dist - len;
-    double scaled_val = 1 - ext / maxExt + 0.05;
+    double scaled_val = ext / maxExt;
 
     SmartDashboard.putNumber("Desired Extension", scaled_val);
     // Scaled from 0 to 1, if outside this range, the shot is unobtainable at the current robot

@@ -2,7 +2,6 @@ package org.frcteam4146.c2022.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
 import java.io.File;
 import java.io.FileReader;
 import org.frcteam4146.c2022.RobotContainer;
@@ -19,118 +18,107 @@ import org.frcteam4146.common.control.TrajectoryConstraint;
 import org.frcteam4146.common.io.PathReader;
 
 public class AutonomousFactory {
-    RobotContainer container;
+  RobotContainer container;
 
-    public AutonomousFactory(RobotContainer container) {
-        this.container = container;
-    }
+  public AutonomousFactory(RobotContainer container) {
+    this.container = container;
+  }
 
-    /*
-     * begins subsystems that will stay activated throughout the autonomous
-     */
-    public SequentialCommandGroup toggleSubsystems(boolean state) {
-        SequentialCommandGroup command = new SequentialCommandGroup();
+  /*
+   * begins subsystems that will stay activated throughout the autonomous
+   */
+  public SequentialCommandGroup toggleSubsystems(boolean state) {
+    SequentialCommandGroup command = new SequentialCommandGroup();
 
-        // add commands to toggle
-        command.addCommands(
-            new ToggleFlywheelCommand(container.getFlywheelSubsystem(), state),
-            new ToggleIntakeExtensionCommand(container.getIntakeSubsystem(), state),
-            new ToggleIntakeMotorCommand(container.getIntakeSubsystem(), state)
-            /* possibly toggle a sensor on the intake/indexer 
-             * The sensor would be used to automatically move any ball
-             * picked up to the second holding position within the indexer
-             * 
-             * This function can also be used in teleop. 
-            */
+    // add commands to toggle
+    command.addCommands(
+        new ToggleFlywheelCommand(container.getFlywheelSubsystem(), state),
+        new ToggleIntakeExtensionCommand(container.getIntakeSubsystem(), state),
+        new ToggleIntakeMotorCommand(container.getIntakeSubsystem(), state)
+        /* possibly toggle a sensor on the intake/indexer
+         * The sensor would be used to automatically move any ball
+         * picked up to the second holding position within the indexer
+         *
+         * This function can also be used in teleop.
+         */
         );
 
-        return command;
+    return command;
+  }
+
+  /*
+   * creates an autonomous path.
+   */
+
+  public SequentialCommandGroup createPath(String pathDirectory) {
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    File[] files = {};
+
+    // path directory can potentially be null, so throw a NullPointerException
+    try {
+      File root = new File(pathDirectory);
+      files = root.listFiles();
+
+    } catch (NullPointerException e) {
+      // if the directory does not exist, just return
+      // empty command here
+      return command;
     }
 
-    /*
-     * creates an autonomous path.
-     */
+    for (File f : files) {
+      if (f.isFile()) {
 
-    public SequentialCommandGroup createPath(String pathDirectory) {
-        SequentialCommandGroup command = new SequentialCommandGroup();
-
-        File[] files = {};
-
-        // path directory can potentially be null, so throw a NullPointerException
+        Trajectory trajectory = null;
         try {
-            File root = new File(pathDirectory);
-            files = root.listFiles();
+          // create trajectory from JSON file
+          PathReader pathReader = new PathReader(new FileReader(f));
+          Path path = pathReader.read();
+          boolean ball = f.getName().toLowerCase().contains("ball");
+          boolean shoot = f.getName().toLowerCase().contains("shoot");
 
-        } catch (NullPointerException e){
-            // if the directory does not exist, just return
-            // empty command here
-            return command;
+          trajectory =
+              new Trajectory(
+                  path, // read JSON file and convert to Path
+                  new TrajectoryConstraint[0], // N/A
+                  0); // TODO: I dont know what this is; we need to know this though.
+
+          command.addCommands(createAutoCommand(trajectory, f, ball, shoot));
+
+        } catch (Exception e) {
         }
-    
-
-        for (File f : files) {
-            if (f.isFile()) {
-
-                Trajectory trajectory = null;
-                try {
-                    // create trajectory from JSON file
-                    PathReader pathReader = new PathReader(new FileReader(f));
-                    Path path = pathReader.read();
-                    boolean ball = f.getName().toLowerCase().contains("ball");
-                    boolean shoot = f.getName().toLowerCase().contains("shoot");
-
-                    trajectory = new Trajectory(
-                        path, // read JSON file and convert to Path
-                        new TrajectoryConstraint[0], // N/A
-                        0); // TODO: I dont know what this is; we need to know this though. 
-                    
-                    command.addCommands(
-                        createAutoCommand(trajectory, f, ball, shoot)
-                    );
-
-                } catch (Exception e) {}
-            }
-        }
-
-        return command;
+      }
     }
 
-    /*
-     * creates auto command that interacts with a ball
-     */
-    public SequentialCommandGroup createAutoCommand(
-        Trajectory trajectory, 
-        File f,
-        boolean ball,
-        boolean shoot) throws Exception {
-            
-        SequentialCommandGroup command = new SequentialCommandGroup();
-        
-        command.addCommands(
-            new FollowTrajectoryCommand(
-                container.getDrivetrainSubsystem(), 
-                trajectory)
-            );
-        
-        if(ball) {
-            command.addCommands(
-                new WaitCommand(0.5) // allow the intake to fully intake the ball. this number may change.
-            );
-        }
+    return command;
+  }
 
-        if(shoot) {
-            command.addCommands(
-                new AimRobotCommand(
-                    container.getDrivetrainSubsystem(),
-                    container.getLimelightSubsystem()),
-                new LoadBallCommand(
-                    container.getIndexerSubsystem()),
-                new ReturnRobotCommand(container.getDrivetrainSubsystem())
-            );
-        }
-        // TODO: add commands
+  /*
+   * creates auto command that interacts with a ball
+   */
+  public SequentialCommandGroup createAutoCommand(
+      Trajectory trajectory, File f, boolean ball, boolean shoot) throws Exception {
 
-        return command;
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(
+        new FollowTrajectoryCommand(container.getDrivetrainSubsystem(), trajectory));
+
+    if (ball) {
+      command.addCommands(
+          new WaitCommand(0.5) // allow the intake to fully intake the ball. this number may change.
+          );
     }
 
+    if (shoot) {
+      command.addCommands(
+          new AimRobotCommand(
+              container.getDrivetrainSubsystem(), container.getLimelightSubsystem()),
+          new LoadBallCommand(container.getIndexerSubsystem()),
+          new ReturnRobotCommand(container.getDrivetrainSubsystem()));
+    }
+    // TODO: add commands
+
+    return command;
+  }
 }

@@ -18,11 +18,6 @@ public class ToggleFlywheelCommand extends CommandBase {
   }
 
   @Override
-  public boolean isFinished() {
-    // TODO Auto-generated method stub
-    return true;
-  }
-  @Override
   public void end(boolean interrupted) {
     flywheel.toggleFlywheel(false);
   }

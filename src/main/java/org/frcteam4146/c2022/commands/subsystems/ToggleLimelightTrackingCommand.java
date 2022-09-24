@@ -23,11 +23,6 @@ public class ToggleLimelightTrackingCommand extends CommandBase {
   }
 
   @Override
-  public boolean isFinished() {
-    // TODO Auto-generated method stub
-    return true;
-  }
-  @Override
   public void end(boolean interrupted) {
     limelight.toggleTracking(false);
   }

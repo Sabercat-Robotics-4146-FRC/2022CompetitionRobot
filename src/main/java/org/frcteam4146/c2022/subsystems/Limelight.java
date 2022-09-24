@@ -10,14 +10,13 @@ public class Limelight implements Subsystem {
 
   public double limelightHeight = 29.75 / 100.0;
   public double targetHeight = 104 / 100.0 + 0.2;
-  public double ballSpeed = 15; // TODO: Recalculate if necessary
+  public double ballSpeed = 8; // TODO: Recalculate if necessary
   public double cameraAng =
-      40; // TODO: calculate the angle the limelight is at, set this to that angle.
+      20; // TODO: calculate the angle the limelight is at, set this to that angle.
 
   public Servos servos;
 
   public boolean tracking;
-
 
   public Limelight(Servos servos) {
 
@@ -105,10 +104,10 @@ public class Limelight implements Subsystem {
     SmartDashboard.putNumber("ty", mLime.getEntry("ty").getDouble(0.0));
     ballSpeed = SmartDashboard.getNumber("Ball Exit Speed", 0);
     cameraAng = SmartDashboard.getNumber("Camera Angle", 0);
+    double desAng = calculateShootingAngle();
 
     if (tracking) {
       if (getSeesTarget()) {
-        double desAng = calculateShootingAngle();
         servos.setServos(desAng);
       } else {
         System.out.println("Cannot see target");
