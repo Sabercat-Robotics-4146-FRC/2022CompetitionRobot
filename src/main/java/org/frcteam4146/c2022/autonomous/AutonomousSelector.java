@@ -26,7 +26,7 @@ public class AutonomousSelector {
             File pathsFile = null;
 
             for (File f : directory.listFiles()) {
-              if (f.getPath().contains("paths")) {
+              if (f.getPath().contains("Path")) {
                 pathsFile = f;
               }
             }
@@ -55,7 +55,7 @@ public class AutonomousSelector {
           String pathname = path.getName();
 
           // replace '_' with ' ' for readability purposes
-          pathChooser.addOption(pathname.replace('_', ' '), path.getPath());
+          pathChooser.addOption(pathname.replace('_', ' '), path.getPath() + "//output");
         });
 
     SmartDashboard.putData("Autonomous Paths", pathChooser);
