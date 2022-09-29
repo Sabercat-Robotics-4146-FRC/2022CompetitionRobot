@@ -9,7 +9,7 @@ public class Limelight implements Subsystem {
   public static NetworkTable mLime;
 
   public double limelightHeight = 29.75 / 100.0;
-  public double targetHeight = 104 / 100.0;
+  public double targetHeight = 104 / 100.0 + 0.05;
   public double ballSpeed = 4.75; // TODO: Recalculate if necessary
   public double cameraAng =
       50; // TODO: calculate the angle the limelight is at, set this to that angle.
@@ -104,6 +104,7 @@ public class Limelight implements Subsystem {
     SmartDashboard.putNumber("ty", mLime.getEntry("ty").getDouble(0.0));
     ballSpeed = SmartDashboard.getNumber("Ball Exit Speed", 0);
     cameraAng = SmartDashboard.getNumber("Camera Angle", 0);
+    SmartDashboard.putNumber("Distance", getDistanceFromTarget());
     double desAng = calculateShootingAngle();
 
     if (tracking) {

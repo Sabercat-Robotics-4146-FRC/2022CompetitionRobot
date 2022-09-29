@@ -33,7 +33,7 @@ public class Flywheel implements Subsystem {
     m_encoder = flywheelLeader.getEncoder();
 
     kP = 0.00002;
-    kI = 0.00000007;
+    kI = 0.0000002;
     kD = 0;
     kIz = 0;
     kFF = 0.000;
@@ -69,6 +69,15 @@ public class Flywheel implements Subsystem {
 
   public void toggleFlywheel(boolean state) {
     flywheelToggle = state;
+  }
+
+  /**
+   * 
+   * @param d distance 
+   */
+  public void determineSetpoint(double d) {
+    if(d < 1.027) setPoint = 2175;  // 
+    else setPoint = 2500;           // 
   }
 
   @Override

@@ -9,7 +9,6 @@ import org.frcteam4146.c2022.commands.commandGroups.LoadBallCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.FollowTrajectoryCommand;
 import org.frcteam4146.c2022.commands.drive.ReturnRobotCommand;
-import org.frcteam4146.c2022.commands.subsystems.ToggleFlywheelCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeExtensionCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeMotorCommand;
 import org.frcteam4146.common.control.Path;
@@ -32,7 +31,7 @@ public class AutonomousFactory {
 
     // add commands to toggle
     command.addCommands(
-        new ToggleFlywheelCommand(container.getFlywheelSubsystem(), state),
+        // new ToggleFlywheelCommand(container.getFlywheelSubsystem(), state),
         new ToggleIntakeExtensionCommand(container.getIntakeSubsystem(), state),
         new ToggleIntakeMotorCommand(container.getIntakeSubsystem(), state)
         /* possibly toggle a sensor on the intake/indexer

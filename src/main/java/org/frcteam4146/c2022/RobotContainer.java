@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frcteam4146.c2022.autonomous.AutonomousSelector;
 import org.frcteam4146.c2022.commands.commandGroups.LoadBallCommand;
-import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleFlywheelCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
@@ -50,14 +49,18 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     // TODO: Configure Button Bindings
-    primaryController.getBButton().toggleWhenPressed(new ToggleFlywheelCommand(flywheel, true));
+    primaryController
+        .getBButton()
+        .toggleWhenPressed(
+            new ToggleFlywheelCommand(limelight.getDistanceFromTarget(), flywheel, true));
     primaryController.getYButton().toggleWhenPressed(new LoadBallCommand(indexer));
     primaryController
         .getAButton()
         .toggleWhenPressed(new ToggleLimelightTrackingCommand(limelight, true));
-    primaryController
-        .getXButton()
-        .toggleWhenPressed(new AimRobotCommand(drivetrainSubsystem, limelight));
+    // primaryController
+    //    .getXButton()
+    //
+    //    .toggleWhenPressed(new AimRobotCommand(drivetrainSubsystem, limelight));
   }
 
   public Command getAutonomousCommand() {
