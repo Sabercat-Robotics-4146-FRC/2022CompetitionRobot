@@ -82,7 +82,7 @@ public class AutonomousFactory {
                   new TrajectoryConstraint[0], // N/A
                   0); // TODO: I dont know what this is; we need to know this though.
 
-          command.addCommands(createAutoCommand(trajectory, f, ball, shoot));
+          command.addCommands(createAutoCommand(trajectory, ball, shoot));
 
         } catch (Exception e) {
         }
@@ -96,7 +96,7 @@ public class AutonomousFactory {
    * creates auto command that interacts with a ball
    */
   public SequentialCommandGroup createAutoCommand(
-      Trajectory trajectory, File f, boolean ball, boolean shoot) throws Exception {
+      Trajectory trajectory, boolean ball, boolean shoot) throws Exception {
 
     SequentialCommandGroup command = new SequentialCommandGroup();
 
