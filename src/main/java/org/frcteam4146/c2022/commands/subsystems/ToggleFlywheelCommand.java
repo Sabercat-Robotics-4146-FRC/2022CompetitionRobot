@@ -8,7 +8,7 @@ public class ToggleFlywheelCommand extends CommandBase {
   private boolean state;
   private double distance;
 
-  public ToggleFlywheelCommand(double distance, Flywheel flywheel, boolean state) {
+  public ToggleFlywheelCommand(Flywheel flywheel, boolean state, double distance) {
     this.flywheel = flywheel;
     this.distance = distance;
     this.state = state;

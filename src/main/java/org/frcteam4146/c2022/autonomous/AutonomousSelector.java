@@ -26,17 +26,15 @@ public class AutonomousSelector {
             File pathsFile = null;
 
             for (File f : directory.listFiles()) {
-              if (f.getPath().contains("Path")) {
+              if (f.getPath().contains("paths")) {
                 pathsFile = f;
               }
             }
 
-            // get all contents of directory
             try {
-              File[] contents = pathsFile.listFiles();
 
               // go through files
-              for (File f : contents) {
+              for (File f : pathsFile.listFiles()) {
 
                 // only add directories to exclude miscellaneous files
                 if (f.isDirectory()) {
@@ -50,13 +48,13 @@ public class AutonomousSelector {
 
     // add each path
     paths.forEach(
-        path -> {
-          // get the path
-          String pathname = path.getName();
+      path -> {
+        // get the path name
+        String pathname = path.getName();
 
-          // replace '_' with ' ' for readability purposes
-          pathChooser.addOption(pathname.replace('_', ' '), path.getPath() + "//output");
-        });
+        // replace '_' with ' ' for readability purposes
+        pathChooser.addOption(pathname.replace('_', ' '), path.getPath());
+      });
 
     SmartDashboard.putData("Autonomous Paths", pathChooser);
   }
@@ -73,7 +71,7 @@ public class AutonomousSelector {
                   auto.toggleSubsystems(false)
                   // just in case the subsystems are still toggled when the
                   // autonomous period ends.
-                  );
+              );
             }
           }
         };

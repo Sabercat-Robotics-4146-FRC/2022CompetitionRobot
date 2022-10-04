@@ -13,13 +13,13 @@ public class ShootBallCommand extends SequentialCommandGroup {
     addCommands(
         new ParallelCommandGroup(
             new ToggleLimelightTrackingCommand(limelight, true), // toggles limelight tracking indefinitely
-            new ToggleFlywheelCommand(flywheel, true)), // toggles flywheel on for entire duration of the command
+            new ToggleFlywheelCommand(flywheel, true, limelight.getDistanceFromTarget())), // toggles flywheel on for entire duration of the command
         new WaitCommand(2),
         new ToggleLimelightTrackingCommand(limelight, false), // disables limelight while ball is being loaded only
         new LoadBallCommand(indexer), // note: there is a wait command inside loadballcommand
         new ParallelCommandGroup( // restore limelight and flywheel to original state
             new ToggleLimelightTrackingCommand(limelight, true),
-            new ToggleFlywheelCommand(flywheel, false)));
+            new ToggleFlywheelCommand(flywheel, false, limelight.getDistanceFromTarget())));
 
   }
 }

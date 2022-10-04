@@ -52,7 +52,7 @@ public class RobotContainer {
     primaryController
         .getBButton()
         .toggleWhenPressed(
-            new ToggleFlywheelCommand(limelight.getDistanceFromTarget(), flywheel, true));
+            new ToggleFlywheelCommand(flywheel, true, limelight.getDistanceFromTarget()));
     primaryController.getYButton().toggleWhenPressed(new LoadBallCommand(indexer));
     primaryController
         .getAButton()
