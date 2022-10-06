@@ -107,6 +107,8 @@ public class Limelight implements Subsystem {
     SmartDashboard.putNumber("Distance", getDistanceFromTarget());
     double desAng = calculateShootingAngle();
 
+    //ballSpeed = (getDistanceFromTarget() > 1.027)? 4.75 : 4.44;
+
     if (tracking) {
       if (getSeesTarget()) {
         servos.setServos(desAng);
