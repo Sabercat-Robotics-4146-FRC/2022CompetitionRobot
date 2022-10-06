@@ -6,6 +6,7 @@ import org.frcteam4146.c2022.autonomous.AutonomousSelector;
 import org.frcteam4146.c2022.commands.commandGroups.LoadBallCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleFlywheelCommand;
+import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeMotorCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
 import org.frcteam4146.c2022.subsystems.*;
 import org.frcteam4146.common.robot.input.XboxController;
@@ -57,10 +58,9 @@ public class RobotContainer {
     primaryController
         .getAButton()
         .toggleWhenPressed(new ToggleLimelightTrackingCommand(limelight, true));
-    // primaryController
-    //    .getXButton()
-    //
-    //    .toggleWhenPressed(new AimRobotCommand(drivetrainSubsystem, limelight));
+    primaryController
+    .getXButton()
+    .toggleWhenPressed(new ToggleIntakeMotorCommand(intake, true));
   }
 
   public Command getAutonomousCommand() {
