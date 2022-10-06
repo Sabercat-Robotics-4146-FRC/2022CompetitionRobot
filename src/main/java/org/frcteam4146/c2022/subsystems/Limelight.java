@@ -79,11 +79,9 @@ public class Limelight implements Subsystem {
     double rotationSpeed = 0;
 
     if (getSeesTarget()) {
-      double horizontal_angle = -getHorizontalOffset();
+      double horizontal_angle = getHorizontalOffset();
       if (!(Math.abs(horizontal_angle) <= 0.03)) {
-        rotationSpeed =
-            (max - min) * (Math.pow((horizontal_angle / 27), 2))
-                + min; // Max angle, I think it is 27
+        rotationSpeed = (max - min) * (horizontal_angle / 27) + min; // Max angle, I think it is 27
         rotationSpeed = Math.copySign(rotationSpeed, horizontal_angle);
         // I think 1 is the upper bound for rotational speed, hence, if not, scaling, and ceiling is
         // unnecessary
@@ -91,7 +89,7 @@ public class Limelight implements Subsystem {
     } else {
       rotationSpeed = 1.5 * max;
     }
-    if (Math.abs((rotationSpeed - pastRotationSpeed) / (pastRotationSpeed)) >= 0.1) {
+    if (Math.abs((rotationSpeed - pastRotationSpeed) / (pastRotationSpeed + 0.0001)) >= 0.1) {
       rotationSpeed += (0.1) * (pastRotationSpeed - rotationSpeed);
     }
     return rotationSpeed;
@@ -107,7 +105,7 @@ public class Limelight implements Subsystem {
     SmartDashboard.putNumber("Distance", getDistanceFromTarget());
     double desAng = calculateShootingAngle();
 
-    //ballSpeed = (getDistanceFromTarget() > 1.027)? 4.75 : 4.44;
+    // ballSpeed = (getDistanceFromTarget() > 1.027)? 4.75 : 4.44;
 
     if (tracking) {
       if (getSeesTarget()) {

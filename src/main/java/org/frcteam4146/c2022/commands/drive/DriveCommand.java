@@ -27,8 +27,8 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     // TODO: add sensitivity customization in SmartDashboard
-    // drivetrainSubsystem.drive(
-    //    new Vector2(-forward.get(true) / 2, strafe.get(true) / 2), rotation.get(true) / 3, false);
+    drivetrainSubsystem.drive(
+        new Vector2(-forward.get(true) / 2, strafe.get(true) / 2), rotation.get(true) / 3, false);
   }
 
   @Override

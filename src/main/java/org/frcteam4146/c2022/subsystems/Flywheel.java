@@ -71,13 +71,10 @@ public class Flywheel implements Subsystem {
     flywheelToggle = state;
   }
 
-  /**
-   * 
-   * @param d distance 
-   */
+  /** @param d distance */
   public void determineSetpoint(double d) {
-    if(d < 1.027) setPoint = 2175;  // 
-    else setPoint = 2500;           // 
+    if (d < 1.027) setPoint = 2175; //
+    else setPoint = 2500; //
   }
 
   @Override

@@ -12,7 +12,7 @@ public class AimRobotCommand extends CommandBase {
   public final Limelight limelight;
 
   private double min = 0;
-  private double max = 0.25;
+  private double max = 0.01;
 
   private double rotationSpeed = 0;
   private double pastRotationSpeed = 0;
@@ -28,16 +28,17 @@ public class AimRobotCommand extends CommandBase {
 
   @Override
   public void execute() {
+
     rotationSpeed = limelight.calculateRotation(min, max, pastRotationSpeed);
     speeds.add(rotationSpeed);
     pastRotationSpeed = rotationSpeed;
 
-    if (Math.abs(rotationSpeed) > 2 * max)
-      end(true); // This should never happen, but, is a safety measure
+    // if (Math.abs(rotationSpeed) > 2 * max)
+    //  end(true); // This should never happen, but, is a safety measure
     SmartDashboard.putNumber("Calculated rotation speed", rotationSpeed);
     System.out.println(speeds);
 
-    // drivetrainSubsystem.drive(Vector2.ZERO, rotationSpeed, false);
+    drivetrainSubsystem.drive(new Vector2(0.02, 0.02), rotationSpeed, false);
   }
 
   @Override
@@ -48,6 +49,6 @@ public class AimRobotCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (limelight.getSeesTarget() && (limelight.getHorizontalOffset()) <= 0.3);
+    return (limelight.getSeesTarget() && Math.abs(limelight.getHorizontalOffset()) <= 0.5);
   }
 }
