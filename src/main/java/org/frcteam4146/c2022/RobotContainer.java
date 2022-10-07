@@ -33,6 +33,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Configure Button Bindings
     primaryController.getYButton().whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
+    primaryController.getXButton().whenPressed(() -> drivetrainSubsystem.toggleDriveFlag());
   }
   public DrivetrainSubsystem getDrivetrainSubsystem() {
     return drivetrainSubsystem;

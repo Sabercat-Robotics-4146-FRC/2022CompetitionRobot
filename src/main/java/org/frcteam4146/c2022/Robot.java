@@ -34,8 +34,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     robotContainer.getDrivetrainSubsystem().resetPose(RigidTransform2.ZERO);
 
-    autonomousCommand = robotContainer.getAutonomousCommand();
-
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }

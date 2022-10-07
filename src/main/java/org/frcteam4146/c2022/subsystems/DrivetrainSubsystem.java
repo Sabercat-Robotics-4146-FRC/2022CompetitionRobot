@@ -29,7 +29,7 @@ import org.frcteam4146.common.robot.UpdateManager;
 import org.frcteam4146.common.util.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
-  public boolean drive_flag;
+  public boolean driveFlag = true;
 
   /*
     This value is used to turn the robot back to its initialPosition
@@ -40,6 +40,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public static final double WHEELBASE = 24.0;
 
   public Timer m_Timer;
+
+  public boolean fieldOriented;
 
   // tune with sysid, view w/ .3190 meters per rotation
   public static final DrivetrainFeedforwardConstants FEEDFORWARD_CONSTANTS =
@@ -105,7 +107,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final NetworkTableEntry odometryAngleEntry;
 
   public DrivetrainSubsystem() {
-    SmartDashboard.putBoolean("Drive Flag", false);
+    SmartDashboard.putBoolean("Drive Flag", driveFlag);
     gyroscope.setInverted(false);
     driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, true);
 
@@ -219,6 +221,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     driveSignal =
         new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
   }
+  public void drive(Vector2 translationalVelocity, double rotationalVelocity) {
+    drive(translationalVelocity, rotationalVelocity, fieldOriented);
+  }
 
   public void resetPose(RigidTransform2 pose) {
     this.pose = pose;
@@ -278,28 +283,31 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void update(double time, double dt) {
     updateOdometry(time, dt);
 
-    // drive signal is used to update the position
-    HolonomicDriveSignal driveSignal;
-
-    Optional<HolonomicDriveSignal> trajectorySignal =
-        follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
-
-    driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
-
-    updateModules(driveSignal, dt);
+    if(driveFlag) {
+      HolonomicDriveSignal driveSignal;
+      Optional<HolonomicDriveSignal> trajectorySignal =
+              follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
+      driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
+      updateModules(driveSignal, dt);
+    }
+    else {
+      updateModules(new HolonomicDriveSignal(new Vector2(0, 0), 0, false), dt);
+    }
   }
 
   @Override
   public void periodic() {
     // get the pose and publish the x-y translations and
     // rotation degrees to SmartDashboard
+
+    SmartDashboard.putBoolean("Field Oriented", fieldOriented);
+    SmartDashboard.putBoolean("Drive Flag", driveFlag);
+
     RigidTransform2 pose = getPose();
     odometryXEntry.setDouble(pose.translation.x);
     odometryYEntry.setDouble(pose.translation.y);
     odometryAngleEntry.setDouble(getPose().rotation.toDegrees());
 
-    // allows user to turn off drive functions completely
-    drive_flag = SmartDashboard.getBoolean("Drive Flag", false);
   }
 
   public double getAverageAbsoluteValueVelocity() {
@@ -337,9 +345,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   }
 
   public void toggleFieldOriented() {
-    driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), driveSignal.getRotation(), !driveSignal.isFieldOriented());
+    fieldOriented = !fieldOriented;
   }
-  public void toggleFieldOriented(boolean fieldOriented) {
-    driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), driveSignal.getRotation(), fieldOriented);
+  public void toggleDriveFlag() {
+    driveFlag = !driveFlag;
   }
 }
