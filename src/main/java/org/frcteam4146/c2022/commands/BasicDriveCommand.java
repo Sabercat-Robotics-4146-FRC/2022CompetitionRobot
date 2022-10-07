@@ -1,4 +1,4 @@
-package org.frcteam4146.c2022.commands.drive;
+package org.frcteam4146.c2022.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frcteam4146.c2022.subsystems.DrivetrainSubsystem;

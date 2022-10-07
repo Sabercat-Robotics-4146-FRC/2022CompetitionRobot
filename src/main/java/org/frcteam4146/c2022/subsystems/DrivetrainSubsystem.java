@@ -97,7 +97,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private Vector2 velocity = Vector2.ZERO;
   private double angularVelocity = 0.0;
 
-  private HolonomicDriveSignal driveSignal = null;
+  private HolonomicDriveSignal driveSignal;
 
   // Logging
   private final NetworkTableEntry odometryXEntry;
@@ -203,7 +203,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         () -> {
           HolonomicDriveSignal signal;
           signal = driveSignal;
-
           if (signal == null) {
             return 0.0;
           }
@@ -285,12 +284,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     Optional<HolonomicDriveSignal> trajectorySignal =
         follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
 
-    if (trajectorySignal.isPresent()) {
-      driveSignal = trajectorySignal.get();
-
-    } else {
-      driveSignal = this.driveSignal;
-    }
+    driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
 
     updateModules(driveSignal, dt);
   }
@@ -340,5 +334,12 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public double getAngularVelocity() {
     return angularVelocity;
+  }
+
+  public void toggleFieldOriented() {
+    driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), driveSignal.getRotation(), !driveSignal.isFieldOriented());
+  }
+  public void toggleFieldOriented(boolean fieldOriented) {
+    driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), driveSignal.getRotation(), fieldOriented);
   }
 }
