@@ -1,6 +1,6 @@
 package org.frcteam4146.c2022.subsystems;
 
-import static org.frcteam4146.c2022.Constants.*;
+import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.ArrayList;
 import java.util.Optional;
-import org.frcteam4146.c2022.Constants;
 import org.frcteam4146.c2022.Pigeon;
 import org.frcteam4146.common.control.*;
 import org.frcteam4146.common.drivers.Gyroscope;
@@ -91,7 +90,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final SwerveModule[] modules;
   private final TalonSRX[] talons;
 
-  private final Gyroscope gyroscope = new Pigeon(Constants.PIGEON_PORT);
+  private final Gyroscope gyroscope = new Pigeon(DriveConstants.PIGEON_PORT);
 
   private final SwerveOdometry swerveOdometry =
       new SwerveOdometry(swerveKinematics, RigidTransform2.ZERO);
@@ -121,50 +120,50 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
                 .withPosition(2, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
-            DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
-            DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
-            DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
+                DriveConstants.DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR,
+                DriveConstants.DRIVETRAIN_FRONT_LEFT_STEER_MOTOR,
+                DriveConstants.DRIVETRAIN_FRONT_LEFT_STEER_ENCODER,
+                DriveConstants.DRIVETRAIN_FRONT_LEFT_STEER_OFFSET);
     SwerveModule frontRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                 .withPosition(4, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
-            DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
-            DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
-            DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
+                DriveConstants.DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR,
+                DriveConstants.DRIVETRAIN_FRONT_RIGHT_STEER_MOTOR,
+                DriveConstants.DRIVETRAIN_FRONT_RIGHT_STEER_ENCODER,
+                DriveConstants.DRIVETRAIN_FRONT_RIGHT_STEER_OFFSET);
     SwerveModule backLeftModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                 .withPosition(6, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
-            DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
-            DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
-            DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
+                DriveConstants.DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR,
+                DriveConstants.DRIVETRAIN_BACK_LEFT_STEER_MOTOR,
+                DriveConstants.DRIVETRAIN_BACK_LEFT_STEER_ENCODER,
+                DriveConstants.DRIVETRAIN_BACK_LEFT_STEER_OFFSET);
     SwerveModule backRightModule =
         Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                 .withPosition(8, 0)
                 .withSize(2, 4),
             Mk4SwerveModuleHelper.GearRatio.L2,
-            DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
-            DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
-            DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
-            DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
+                DriveConstants.DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR,
+                DriveConstants.DRIVETRAIN_BACK_RIGHT_STEER_MOTOR,
+                DriveConstants.DRIVETRAIN_BACK_RIGHT_STEER_ENCODER,
+                DriveConstants.DRIVETRAIN_BACK_RIGHT_STEER_OFFSET);
 
     modules =
         new SwerveModule[] {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
 
     talons =
         new TalonSRX[] {
-          new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
-          new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
-          new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
-          new TalonSRX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR)
+          new TalonSRX(DriveConstants.DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DriveConstants.DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
+          new TalonSRX(DriveConstants.DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
+          new TalonSRX(DriveConstants.DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR)
         };
 
     for (var talon : talons) {

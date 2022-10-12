@@ -198,9 +198,9 @@ package org.frcteam4146.common.robot.drivers;
 //         final double sensorCoefficient = (2.0 * Math.PI) / (reduction * 2048.0);
 
 //         TalonFXConfiguration config = new TalonFXConfiguration();
-//         config.slot0.kP = constants.p;
-//         config.slot0.kI = constants.i;
-//         config.slot0.kD = constants.d;
+//         config.slot0.P = constants.p;
+//         config.slot0.I = constants.i;
+//         config.slot0.D = constants.d;
 
 //         motor.setNeutralMode(NeutralMode.Brake);
 
