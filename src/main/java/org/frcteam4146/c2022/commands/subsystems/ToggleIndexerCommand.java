@@ -18,7 +18,12 @@ public class ToggleIndexerCommand extends CommandBase {
   }
 
   @Override
+  public boolean isFinished() {
+    return true;
+  }
+
+  @Override
   public void end(boolean interrupted) {
-    indexer.toggleIndexer(false);
+    if (interrupted) indexer.toggleIndexer(false);
   }
 }

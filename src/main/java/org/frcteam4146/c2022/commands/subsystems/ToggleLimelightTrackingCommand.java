@@ -24,6 +24,11 @@ public class ToggleLimelightTrackingCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    limelight.toggleTracking(false);
+    if (interrupted) limelight.toggleTracking(false);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return true;
   }
 }
