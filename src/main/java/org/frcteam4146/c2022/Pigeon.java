@@ -6,17 +6,21 @@ import org.frcteam4146.common.math.Rotation2;
 
 public class Pigeon extends Gyroscope {
   private final Pigeon2 pigeon;
+  private double offset;
 
   public Pigeon(int id) {
+
     this.pigeon = new Pigeon2(id);
   }
 
   @Override
-  public void calibrate() {}
+  public void calibrate() {
+    offset = pigeon.getYaw();
+  }
 
   @Override
   public Rotation2 getUnadjustedAngle() {
-    return Rotation2.fromDegrees(pigeon.getYaw());
+    return Rotation2.fromDegrees(pigeon.getYaw() - offset);
   }
 
   @Override

@@ -4,6 +4,9 @@ public final class Constants {
 
   public static final class DriveConstants {
 
+    public static final double TRACKWIDTH = 24.0;
+    public static final double WHEELBASE = 24.0;
+
     public static final int DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR = 3;
     public static final int DRIVETRAIN_FRONT_LEFT_STEER_MOTOR = 4;
     public static final int DRIVETRAIN_FRONT_LEFT_STEER_ENCODER = 10;
@@ -55,9 +58,11 @@ public final class Constants {
   public static final class LimelightConstants {
     public static final double LIMELIGHT_HEIGHT = 29.75 / 100.0;
     public static final double TARGET_HEIGHT = 104 / 100.0 + 0.05;
+    public static final double HOOP_AIM_OFFSET = 0.3;
+
     public static final double[] BALL_SPEEDS = {4.75, 4.44};
     public static final double CAMERA_ANG = 50;
-    public static final double DIST_CUTOFF = 1.027;
+    public static final double DIST_CUTOFF = 1.227;
 
     public static final double HEIGHT_DIFF = TARGET_HEIGHT - LIMELIGHT_HEIGHT;
   }
@@ -73,5 +78,9 @@ public final class Constants {
     public static final double MAX_EXT = 0.17;
   }
 
-  public static final class IntakeConstants {}
+  public static final class IntakeConstants {
+
+    public static final int INTAKE_MOTOR = 13;
+    public static final int INTAKE_SOLENOID = 21;
+  }
 }

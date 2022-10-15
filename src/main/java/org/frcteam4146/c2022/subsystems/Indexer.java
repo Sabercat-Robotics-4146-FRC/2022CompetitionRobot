@@ -5,6 +5,7 @@ import static org.frcteam4146.c2022.Constants.IndexerConstants;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class Indexer implements Subsystem {
@@ -61,5 +62,11 @@ public class Indexer implements Subsystem {
 
   public boolean getTopSensor() {
     return indexerTopSensor.get();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean("TopSensor", getTopSensor());
+    SmartDashboard.putBoolean("BottomSensor", getBottomSensor());
   }
 }

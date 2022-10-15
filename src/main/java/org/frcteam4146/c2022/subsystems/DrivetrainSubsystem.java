@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.ArrayList;
 import java.util.Optional;
-import org.frcteam4146.c2022.Pigeon;
 import org.frcteam4146.common.control.*;
 import org.frcteam4146.common.drivers.Gyroscope;
 import org.frcteam4146.common.kinematics.ChassisVelocity;
@@ -34,9 +33,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     This value is used to turn the robot back to its initialPosition
   */
   public ArrayList<Double> speeds;
-
-  public static final double TRACKWIDTH = 24.0;
-  public static final double WHEELBASE = 24.0;
 
   public Timer m_Timer;
 
@@ -61,8 +57,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         FEEDFORWARD_CONSTANTS.getVelocityConstant(),
         FEEDFORWARD_CONSTANTS.getAccelerationConstant(),
         false),
-    new MaxAccelerationConstraint(12.5 * 12.0), // originally 12.5 * 12.0
-    new CentripetalAccelerationConstraint(15 * 12.0)
+    new MaxAccelerationConstraint(1 * 12.0), // originally 12.5 * 12.0
+    new CentripetalAccelerationConstraint(1 * 12.0)
   };
 
   private final HolonomicMotionProfiledTrajectoryFollower follower =
@@ -73,10 +69,14 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   private final SwerveKinematics swerveKinematics =
       new SwerveKinematics(
-          new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0), // front left
-          new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0), // front right
-          new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0), // back left
-          new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0) // back right
+          new Vector2(
+              DriveConstants.TRACKWIDTH / 2.0, DriveConstants.WHEELBASE / 2.0), // front left
+          new Vector2(
+              DriveConstants.TRACKWIDTH / 2.0, -DriveConstants.WHEELBASE / 2.0), // front right
+          new Vector2(
+              -DriveConstants.TRACKWIDTH / 2.0, DriveConstants.WHEELBASE / 2.0), // back left
+          new Vector2(
+              -DriveConstants.TRACKWIDTH / 2.0, -DriveConstants.WHEELBASE / 2.0) // back right
           );
 
   // private final SwerveDriveKinematics wpi_driveKinematics = new
@@ -90,7 +90,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final SwerveModule[] modules;
   private final TalonSRX[] talons;
 
-  private final Gyroscope gyroscope = new Pigeon(DriveConstants.PIGEON_PORT);
+  private final Gyroscope gyroscope;
 
   private final SwerveOdometry swerveOdometry =
       new SwerveOdometry(swerveKinematics, RigidTransform2.ZERO);
@@ -105,7 +105,8 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private final NetworkTableEntry odometryYEntry;
   private final NetworkTableEntry odometryAngleEntry;
 
-  public DrivetrainSubsystem() {
+  public DrivetrainSubsystem(Gyroscope gyroscope) {
+    this.gyroscope = gyroscope;
     SmartDashboard.putBoolean("Drive Flag", driveFlag);
     gyroscope.setInverted(false);
     driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, true);
@@ -167,11 +168,11 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         };
 
     for (var talon : talons) {
-      talon.configPeakCurrentLimit(20); // max. current (amps)
+      talon.configPeakCurrentLimit(15); // max. current (amps)
       talon.configPeakCurrentDuration(
           5); // # milliseconds after peak reached before regulation starts
       talon.configContinuousCurrentLimit(10); // continuous current (amps) after regulation
-      talon.configOpenloopRamp(.5); // # seconds to reach peak throttle
+      talon.configOpenloopRamp(1); // # seconds to reach peak throttle
     }
 
     odometryXEntry = tab.add("X", 0.0).withPosition(0, 0).withSize(1, 1).getEntry();
@@ -348,5 +349,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public void toggleDriveFlag() {
     driveFlag = !driveFlag;
+  }
+
+  public Vector2 getTranslation() {
+    return driveSignal.getTranslation();
   }
 }

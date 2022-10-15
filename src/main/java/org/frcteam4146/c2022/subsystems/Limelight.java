@@ -41,7 +41,8 @@ public class Limelight implements Subsystem {
 
   public double getDistanceFromTarget() {
     double verticalOffset = getVerticalOffset() * (Math.PI / 180.0);
-    return (LimelightConstants.HEIGHT_DIFF) / Math.tan(verticalOffset) + 0.3;
+    return (LimelightConstants.HEIGHT_DIFF) / Math.tan(verticalOffset)
+        + LimelightConstants.HOOP_AIM_OFFSET;
   }
 
   public double calculateShootingAngle() {

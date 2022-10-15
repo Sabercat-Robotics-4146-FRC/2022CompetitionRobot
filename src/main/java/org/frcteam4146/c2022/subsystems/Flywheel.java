@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.frcteam4146.c2022.Constants.LimelightConstants;
 
 public class Flywheel implements Subsystem {
 
@@ -78,7 +79,7 @@ public class Flywheel implements Subsystem {
 
   /** @param d distance */
   public void determineSetpoint(double d) {
-    if (d < 1.027) setPoint = 2175; //
+    if (d < LimelightConstants.DIST_CUTOFF) setPoint = 2175; //
     else setPoint = 2500; //
     SmartDashboard.putNumber("Setpoint", setPoint);
   }
