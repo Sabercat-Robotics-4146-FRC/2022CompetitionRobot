@@ -20,7 +20,7 @@ public class ShootBallCommand extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new ToggleLimelightTrackingCommand(limelight, true),
             new ParallelRaceGroup(
-                new SpinFlywheelCommand(flywheel, limelight, true), new WaitCommand(3))),
+                new SpinFlywheelCommand(flywheel, limelight, true), new WaitCommand(5))),
         new ToggleLimelightTrackingCommand(limelight, false),
         new LoadBallCommand(indexer),
         new ParallelCommandGroup(

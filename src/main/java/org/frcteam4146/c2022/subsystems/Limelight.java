@@ -86,16 +86,18 @@ public class Limelight implements Subsystem {
 
     SmartDashboard.putBoolean("Limelight Tracking", tracking);
     SmartDashboard.putNumber("ty", mLime.getEntry("ty").getDouble(0.0));
-    ballSpeed = SmartDashboard.getNumber("Ball Exit Speed", 0);
+    // ballSpeed = SmartDashboard.getNumber("Ball Exit Speed", 0);
     cameraAng = SmartDashboard.getNumber("Camera Angle", 0);
 
     SmartDashboard.putNumber("Distance", getDistanceFromTarget());
 
     double desAng = calculateShootingAngle();
-    ballSpeed =
-        (getDistanceFromTarget() > LimelightConstants.DIST_CUTOFF)
-            ? LimelightConstants.BALL_SPEEDS[0]
-            : LimelightConstants.BALL_SPEEDS[1];
+    double d = getDistanceFromTarget();
+    ballSpeed = 4.75;
+    if (d < LimelightConstants.DIST_CUTOFF[1]) ballSpeed = LimelightConstants.BALL_SPEEDS[2]; //
+    else if (d < LimelightConstants.DIST_CUTOFF[0])
+      ballSpeed = LimelightConstants.BALL_SPEEDS[1]; //
+    else ballSpeed = LimelightConstants.BALL_SPEEDS[0];
 
     if (tracking && getSeesTarget()) servos.setServos(desAng);
   }

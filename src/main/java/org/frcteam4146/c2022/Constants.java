@@ -38,6 +38,8 @@ public final class Constants {
     public static final int FLYWHEEL_LEADER = 31;
     public static final int FLYWHEEL_FOLLOWER = 32;
 
+    public static final double[] flywheelSetpoints = {2750,2500,2175};
+
     public static final double P = 0.00002;
     public static final double I = 0.00000022;
     public static final double D = 0;
@@ -58,11 +60,12 @@ public final class Constants {
   public static final class LimelightConstants {
     public static final double LIMELIGHT_HEIGHT = 29.75 / 100.0;
     public static final double TARGET_HEIGHT = 104 / 100.0 + 0.05;
-    public static final double HOOP_AIM_OFFSET = 0.3;
+    public static final double HOOP_AIM_OFFSET = 0.4;
 
-    public static final double[] BALL_SPEEDS = {4.75, 4.44};
-    public static final double CAMERA_ANG = 50;
-    public static final double DIST_CUTOFF = 1.227;
+
+    public static final double[] BALL_SPEEDS = {4.85, 4.75, 4.45};
+    public static final double CAMERA_ANG = 60;
+    public static final double[] DIST_CUTOFF = {1.27, 1.02};
 
     public static final double HEIGHT_DIFF = TARGET_HEIGHT - LIMELIGHT_HEIGHT;
   }

@@ -10,7 +10,7 @@ public class LoadBallCommand extends SequentialCommandGroup {
     addCommands(
         new ToggleIndexerCommand(indexer, true),
         // new WaitUntilCommand(indexer::getTopSensor),
-        new WaitCommand(3),
+        new WaitCommand(4),
         new ToggleIndexerCommand(indexer, false));
   }
 }
