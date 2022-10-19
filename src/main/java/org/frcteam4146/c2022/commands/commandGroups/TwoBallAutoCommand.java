@@ -24,7 +24,7 @@ public class TwoBallAutoCommand extends SequentialCommandGroup {
                         new WaitUntilCommand(intake::pickedUpBall)
                 ),
                 new WaitCommand(0.5),
-                new AimRobotCommand(drivetrain, robotContainer.getLimelight(),gyro),
+                new AimRobotCommand(drivetrain, robotContainer.getLimelight()),
                 new WaitCommand(0.5),
                 new ShootBallCommand(robotContainer.getLimelight(), robotContainer.getFlywheel(), robotContainer.getIndexer())
         );

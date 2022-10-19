@@ -59,7 +59,7 @@ public class RobotContainer {
         .toggleWhenPressed(new ShootBallCommand(limelight, flywheel, indexer));
     primaryController
         .getYButton()
-        .toggleWhenPressed(new AimRobotCommand(drivetrainSubsystem, limelight, gyroscope));
+        .toggleWhenPressed(new AimRobotCommand(drivetrainSubsystem, limelight));
     primaryController
         .getLeftBumperButton()
         .whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
