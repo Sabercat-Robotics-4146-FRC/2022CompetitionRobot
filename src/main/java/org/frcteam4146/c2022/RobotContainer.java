@@ -3,8 +3,8 @@ package org.frcteam4146.c2022;
 import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
+import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
@@ -69,18 +69,23 @@ public class RobotContainer {
   public DrivetrainSubsystem getDrivetrain() {
     return drivetrainSubsystem;
   }
+
   public Gyroscope getGyroscope() {
     return gyroscope;
   }
+
   public Limelight getLimelight() {
     return limelight;
   }
+
   public Flywheel getFlywheel() {
     return flywheel;
   }
+
   public Intake getIntake() {
     return intake;
   }
+
   public Indexer getIndexer() {
     return indexer;
   }
