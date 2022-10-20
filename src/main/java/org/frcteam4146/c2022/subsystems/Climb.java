@@ -31,25 +31,17 @@ public class Climb implements Subsystem {
 
     }
 
-    public void setAnchorArmHeight(double height) {
-        if (height > ClimbConstants.MAX_HEIGHT || height < ClimbConstants.MIN_HEIGHT) {
-            return;
-        }
-        anchorMotor.getPIDController().setReference(height, ControlType.kPosition);
+
+
+    public void extendAnchorArm(double percent) {
+        anchorMotor.setVoltage(percent*12);
+    }
+    
+    public void extendMiddleMotor(double percent) {
+        middleMotor.setVoltage(percent);
     }
 
-    public void setArmRotation(double angle) {
-        double setpointTicks = ClimbConstants.VERTICAL_DISTANCE_TO_MOTOR * Math.tan(angle) * 90 / Math.PI; // TODO calculate vertical distance to motor and test
-        topMotor.getPIDController().setReference(setpointTicks, ControlType.kPosition);
-    }
-
-    /* public void setExtensionSpeed(double speed) {
-        List.of(anchorMotor, middleMotor).forEach(
-
-            if (anchorMotor.getEncoder())
-
-        )
-    } */
+    
 
     public double getAnchorArmHeight() {
         return anchorMotor.getEncoder().getPosition();

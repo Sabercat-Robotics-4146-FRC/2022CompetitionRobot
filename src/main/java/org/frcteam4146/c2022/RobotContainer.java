@@ -3,6 +3,8 @@ package org.frcteam4146.c2022;
 import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import org.frcteam4146.c2022.commands.commandGroups.AimRobotCommand;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
@@ -17,13 +19,15 @@ public class RobotContainer {
   private final Gyroscope gyroscope = new Pigeon(DriveConstants.PIGEON_PORT);
   private final XboxController primaryController =
       new XboxController(DriveConstants.PRIMARY_CONTROLLER_PORT);
+  private final XboxController secondaryController = 
+      new XboxController(DriveConstants.SECONDARY_CONTROLLER_PORT);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(gyroscope);
 
   private final Flywheel flywheel = new Flywheel();
   private final Indexer indexer = new Indexer();
   private final Servos servos = new Servos();
   private final Limelight limelight = new Limelight(servos);
-
+  private final Climb climb = new Climb();
   public final Intake intake = new Intake();
 
   public RobotContainer() {
@@ -34,7 +38,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(indexer);
     CommandScheduler.getInstance().registerSubsystem(servos);
     CommandScheduler.getInstance().registerSubsystem(limelight);
-
+    CommandScheduler.getInstance().registerSubsystem(climb);
     CommandScheduler.getInstance().registerSubsystem(intake);
 
     CommandScheduler.getInstance()
@@ -45,6 +49,12 @@ public class RobotContainer {
                 primaryController.getLeftYAxis(),
                 primaryController.getLeftXAxis(),
                 primaryController.getRightXAxis()));
+
+    // always active
+    CommandScheduler.getInstance()
+        .setDefaultCommand(
+            climb, 
+            ExtendAnchorArm(climb));
 
     configureButtonBindings();
   }

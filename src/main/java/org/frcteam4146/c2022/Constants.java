@@ -31,6 +31,8 @@ public final class Constants {
         -Math.toRadians(239.14489746093753);
 
     public static final int PRIMARY_CONTROLLER_PORT = 0;
+    public static final int SECONDARY_CONTROLLER_PORT = 1;
+
     public static final int PIGEON_PORT = 16;
   }
 
@@ -93,8 +95,10 @@ public final class Constants {
     public static final int TOP_MOTOR = 0;
     public static final int SOLENOID = 0;
 
-    public static final double MAX_HEIGHT = 0; // TODO calculate
-    public static final double MIN_HEIGHT = 0;
+    public static final double MAX_ANCHOR_HEIGHT = 0; // TODO calculate
+    public static final double MIN_ANCHOR_HEIGHT = 0;
+    public static final double MAX_ARM_HEIGHT = 0;
+    public static final double MIN_ARM_HEIGHT = 0;
     public static final double VERTICAL_DISTANCE_TO_MOTOR = 0;
   }
 }
