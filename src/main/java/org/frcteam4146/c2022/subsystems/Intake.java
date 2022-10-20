@@ -28,4 +28,8 @@ public class Intake implements Subsystem {
     if (state) intake.setVoltage(11);
     else intake.setVoltage(0);
   }
+
+  public boolean pickedUpBall() {
+    return false;
+  }
 }

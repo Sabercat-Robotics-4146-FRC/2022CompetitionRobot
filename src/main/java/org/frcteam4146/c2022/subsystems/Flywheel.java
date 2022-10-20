@@ -79,8 +79,10 @@ public class Flywheel implements Subsystem {
 
   /** @param d distance */
   public void determineSetpoint(double d) {
-    if (d < LimelightConstants.DIST_CUTOFF[1]) setPoint = FlywheelConstants.flywheelSetpoints[2]; //
-    else if (d < LimelightConstants.DIST_CUTOFF[0]) setPoint = FlywheelConstants.flywheelSetpoints[1]; //
+    if (d < LimelightConstants.DIST_CUTOFF[1])
+      setPoint = FlywheelConstants.flywheelSetpoints[2]; //
+    else if (d < LimelightConstants.DIST_CUTOFF[0])
+      setPoint = FlywheelConstants.flywheelSetpoints[1]; //
     else setPoint = FlywheelConstants.flywheelSetpoints[0];
     SmartDashboard.putNumber("Setpoint", setPoint);
   }

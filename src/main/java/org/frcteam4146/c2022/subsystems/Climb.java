@@ -1,44 +1,38 @@
 package org.frcteam4146.c2022.subsystems;
 
 import static org.frcteam4146.c2022.Constants.ClimbConstants;
+
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-
-import java.util.List;
 
 public class Climb implements Subsystem {
 
-    public CANSparkMax anchorMotor;
-    public CANSparkMax middleMotor;
-    public CANSparkMax topMotor;
+  public CANSparkMax anchorMotor; // lowest position on winch assembly
+  public CANSparkMax extensionMotor;  // middle position on winch assembly
+  public CANSparkMax rotationMotor;  // top position on winch assembly
 
-    public boolean extensionState; // TODO make variable live
+  public boolean extensionState; // TODO make variable live
 
-    public Climb() {
-
-        anchorMotor = new CANSparkMax(ClimbConstants.ANCHOR_MOTOR, MotorType.kBrushless);
-        middleMotor = new CANSparkMax(ClimbConstants.MIDDLE_MOTOR, MotorType.kBrushless); // controls extension
-        topMotor = new CANSparkMax(ClimbConstants.TOP_MOTOR, MotorType.kBrushless); // controls rotation
-
+  public Climb() {
+        extensionMotor = new CANSparkMax(ClimbConstants.ANCHOR_MOTOR, MotorType.kBrushless);
+        extensionMotor = new CANSparkMax(ClimbConstants.EXTENSION_MOTOR, MotorType.kBrushless);
+    
+        rotationMotor = new CANSparkMax(ClimbConstants.ROTATION_MOTOR, MotorType.kBrushless);
+        rotationMotor.getEncoder().setPositionConversionFactor(42); // automatically converts from encoder ticks to rotations
+    
         extensionState = false;
-
     }
-
-
 
     public void extendAnchorArm(double percent) {
         anchorMotor.setVoltage(percent*12);
     }
     
     public void extendMiddleMotor(double percent) {
-        middleMotor.setVoltage(percent);
+        extensionMotor.setVoltage(percent);
     }
 
     
@@ -48,11 +42,17 @@ public class Climb implements Subsystem {
     }
 
     public double getArmHeight() {
-        return middleMotor.getEncoder().getPosition();
+        return extensionMotor.getEncoder().getPosition();
     }
 
     public boolean isExtended() {
         return extensionState;
     }
-    
+
+  @Override
+  public void periodic() {
+      SmartDashboard.putNumber("Anchor Arm Height", anchorMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("Arm Extension Length", extensionMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("Arm Rotation Length", rotationMotor.getEncoder().getPosition());
+  }
 }
