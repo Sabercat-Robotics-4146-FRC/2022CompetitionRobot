@@ -87,10 +87,9 @@ public final class Constants {
   }
 
   public static final class ClimbConstants {
-    public static final int ANCHOR_MOTOR = 0; // TODO find in phoenix tuner
-    public static final int MIDDLE_MOTOR = 0;
-    public static final int TOP_MOTOR = 0;
-    public static final int SOLENOID = 0;
+    public static final int ANCHOR_MOTOR = 41; // TODO check in phoenix tuner
+    public static final int EXTENSION_MOTOR = 42;
+    public static final int ROTATION_MOTOR = 43;
 
     public static final double MAX_HEIGHT = 0; // TODO calculate
     public static final double MIN_HEIGHT = 0;
