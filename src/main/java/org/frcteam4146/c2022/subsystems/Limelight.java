@@ -15,7 +15,7 @@ public class Limelight implements Subsystem {
 
   public Servos servos;
 
-  public boolean tracking;
+  public boolean tracking = true;
 
   public Limelight(Servos servos) {
 

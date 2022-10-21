@@ -38,7 +38,7 @@ public final class Constants {
     public static final int FLYWHEEL_LEADER = 31;
     public static final int FLYWHEEL_FOLLOWER = 32;
 
-    public static final double[] flywheelSetpoints = {2750,2500,2175};
+    public static final double[] flywheelSetpoints = {2750, 2500, 2175};
 
     public static final double P = 0.00002;
     public static final double I = 0.00000022;
@@ -62,7 +62,6 @@ public final class Constants {
     public static final double TARGET_HEIGHT = 104 / 100.0 + 0.05;
     public static final double HOOP_AIM_OFFSET = 0.4;
 
-
     public static final double[] BALL_SPEEDS = {4.85, 4.75, 4.45};
     public static final double CAMERA_ANG = 60;
     public static final double[] DIST_CUTOFF = {1.27, 1.02};
@@ -84,6 +83,6 @@ public final class Constants {
   public static final class IntakeConstants {
 
     public static final int INTAKE_MOTOR = 13;
-    public static final int INTAKE_SOLENOID = 21;
+    public static final int INTAKE_SOLENOID = 01;
   }
 }
