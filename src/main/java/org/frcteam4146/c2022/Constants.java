@@ -91,7 +91,7 @@ public final class Constants {
     public static final int EXTENSION_MOTOR = 42;
     public static final int ROTATION_MOTOR = 43;
 
-    public static final double MAX_HEIGHT = 0; // TODO calculate
+    public static final double MAX_HEIGHT = 0; // TODO measure max and min height
     public static final double MIN_HEIGHT = 0;
     public static final double VERTICAL_DISTANCE_TO_MOTOR = 0;
   }
