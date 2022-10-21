@@ -4,25 +4,23 @@ import org.frcteam4146.c2022.subsystems.Climb;
 import org.frcteam4146.common.robot.input.Axis;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendAnchorArmCommand extends CommandBase {
+public class ExtendArmCommand extends CommandBase {
     Climb climb;
-    Axis up;
-    Axis down;
+    Axis x;
 
-    public ExtendAnchorArmCommand(Climb climb, Axis up, Axis down) {
+    public ExtendArmCommand(Climb climb, Axis x) {
         this.climb = climb;
-        this.up = up;
-        this.down = down;
+        this.x = x;
     }
 
     @Override
     public void execute() {
-        climb.extendAnchorArm(up.get(), down.get());
+        climb.extendArm(x.get());
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interupted) {
         // TODO Auto-generated method stub
-        climb.anchorMotor.stopMotor();
+        climb.extensionMotor.stopMotor();
     }
 }

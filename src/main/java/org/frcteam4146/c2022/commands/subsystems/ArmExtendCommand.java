@@ -4,13 +4,11 @@ import org.frcteam4146.c2022.subsystems.Climb;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-// uses a closed loop with position
-
-public class AnchorArmCommand extends CommandBase {
-    
+public class ArmExtendCommand extends CommandBase {
+       
     Climb climb;
 
-    public AnchorArmCommand(Climb climb) {
+    public ArmExtendCommand(Climb climb) {
         this.climb = climb;
     }
 
@@ -22,11 +20,11 @@ public class AnchorArmCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return climb.anchorIsExtended();
+        return climb.armIsExtended();
     }
 
     @Override
     public void end(boolean interrupted) {
-        climb.anchorMotor.stopMotor();
+        climb.extensionMotor.stopMotor();
     }
 }

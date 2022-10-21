@@ -6,6 +6,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
+import org.frcteam4146.c2022.commands.subsystems.AnchorArmCommand;
+import org.frcteam4146.c2022.commands.subsystems.ArmExtendCommand;
+import org.frcteam4146.c2022.commands.subsystems.ExtendAnchorArmCommand;
+import org.frcteam4146.c2022.commands.subsystems.ExtendArmCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
 import org.frcteam4146.c2022.subsystems.*;
@@ -52,7 +56,24 @@ public class RobotContainer {
     CommandScheduler.getInstance()
         .setDefaultCommand(
             climb, 
-            //ExtendAnchorArm(climb));
+            new ExtendAnchorArmCommand(
+              climb,
+              secondaryController.getLeftTriggerAxis(),
+              secondaryController.getRightTriggerAxis()));
+
+    CommandScheduler.getInstance()
+        .setDefaultCommand(
+          climb,
+          new ExtendArmCommand(
+            climb,
+            secondaryController.getLeftXAxis()));
+      
+    CommandScheduler.getInstance()
+    .setDefaultCommand(
+      climb,
+      new RotateArmCommand(
+        climb,
+        secondaryController.getLeftXAxis()));
 
     configureButtonBindings();
   }
@@ -72,6 +93,9 @@ public class RobotContainer {
         .getLeftBumperButton()
         .whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
     primaryController.getStartButton().whenPressed(() -> gyroscope.calibrate());
+
+    secondaryController.getAButton().whenPressed(new AnchorArmCommand(climb));
+    secondaryController.getBButton().whenPressed(new ArmExtendCommand(climb));
   }
 
   public DrivetrainSubsystem getDrivetrain() {

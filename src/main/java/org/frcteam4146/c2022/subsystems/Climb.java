@@ -6,6 +6,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import org.frcteam4146.c2022.Constants.ClimbConstants;
+import org.frcteam4146.common.robot.input.Axis;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -18,7 +21,7 @@ public class Climb implements Subsystem {
   public boolean extensionState; // TODO make variable live
 
   public Climb() {
-        extensionMotor = new CANSparkMax(ClimbConstants.ANCHOR_MOTOR, MotorType.kBrushless);
+        anchorMotor = new CANSparkMax(ClimbConstants.ANCHOR_MOTOR, MotorType.kBrushless);
         extensionMotor = new CANSparkMax(ClimbConstants.EXTENSION_MOTOR, MotorType.kBrushless);
     
         rotationMotor = new CANSparkMax(ClimbConstants.ROTATION_MOTOR, MotorType.kBrushless);
@@ -27,15 +30,25 @@ public class Climb implements Subsystem {
         extensionState = false;
     }
 
-    public void extendAnchorArm(double percent) {
-        anchorMotor.setVoltage(percent*12);
-    }
-    
-    public void extendMiddleMotor(double percent) {
-        extensionMotor.setVoltage(percent);
+    public void extendAnchorArm(double up, double down) {
+        anchorMotor.set((up>0)?-up:down);
     }
 
+    public void extendAnchorArm() {
+        anchorMotor.getPIDController().setReference(ClimbConstants.MAX_ANCHOR_HEIGHT, ControlType.kPosition);
+    }
     
+    public void extendArm(double x) {
+        extensionMotor.set(x);    
+    }
+
+    public void extendArm() {
+        extensionMotor.getPIDController().setReference(ClimbConstants.MAX_ARM_HEIGHT, ControlType.kPosition);
+    }
+
+    public void rotateArm(double x) {
+        rotationMotor.set(-x);
+    }
 
     public double getAnchorArmHeight() {
         return anchorMotor.getEncoder().getPosition();
@@ -45,8 +58,12 @@ public class Climb implements Subsystem {
         return extensionMotor.getEncoder().getPosition();
     }
 
-    public boolean isExtended() {
-        return extensionState;
+    public boolean anchorIsExtended() {
+        return anchorMotor.getEncoder().getPosition() == ClimbConstants.MAX_ANCHOR_HEIGHT;
+    }
+
+    public boolean armIsExtended() {
+        return extensionMotor.getEncoder().getPosition() == ClimbConstants.MAX_ANCHOR_HEIGHT;
     }
 
   @Override
