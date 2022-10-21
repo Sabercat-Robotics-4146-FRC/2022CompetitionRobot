@@ -1,6 +1,11 @@
 package org.frcteam4146.c2022;
 
+import java.security.PublicKey;
+
 public final class Constants {
+
+  public static final int PRIMARY_CONTROLLER_PORT = 0;
+  public static final int SECONDARY_CONTROLLER_PORT = 1;
 
   public static final class DriveConstants {
 
@@ -29,8 +34,6 @@ public final class Constants {
     public static final int DRIVETRAIN_BACK_RIGHT_STEER_ENCODER = 11;
     public static final double DRIVETRAIN_BACK_RIGHT_STEER_OFFSET =
         -Math.toRadians(239.14489746093753);
-
-    public static final int PRIMARY_CONTROLLER_PORT = 0;
     public static final int PIGEON_PORT = 16;
   }
 
@@ -85,5 +88,11 @@ public final class Constants {
 
     public static final int INTAKE_MOTOR = 13;
     public static final int INTAKE_SOLENOID = 21;
+  }
+
+  public static final class ClimbConstants {
+    public static final int ANCHOR_EXT_MOTOR = 41;
+    public static final int ARM_EXT_MOTOR = 42;
+    public static final int ARM_ROT_MOTOR = 43;
   }
 }
