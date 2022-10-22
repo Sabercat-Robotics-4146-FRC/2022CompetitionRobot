@@ -3,11 +3,13 @@ package org.frcteam4146.c2022;
 import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.frcteam4146.c2022.commands.commandGroups.ShootNoLimelightCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
+import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
 import org.frcteam4146.c2022.subsystems.*;
 import org.frcteam4146.common.drivers.Gyroscope;
 import org.frcteam4146.common.robot.input.XboxController;
@@ -65,8 +67,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Configure Button Bindings
     // primaryController.getAButton().whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
-    primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true));
-    //primaryController.getXButton().toggleWhenPressed(new ToggleLimelightTrackingCommand(limelight));
+    primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true, false));
+    primaryController.getXButton().toggleWhenPressed(new ShootNoLimelightCommand(this));
     primaryController
         .getBButton()
         .toggleWhenPressed(new ShootBallCommand(limelight, flywheel, indexer));
@@ -76,7 +78,9 @@ public class RobotContainer {
     primaryController
         .getLeftBumperButton()
         .whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
+    primaryController.getRightBumperButton().whenPressed(new ToggleLimelightTrackingCommand(limelight,true));
     primaryController.getStartButton().whenPressed(() -> gyroscope.calibrate());
+
   }
 
   public DrivetrainSubsystem getDrivetrain() {
@@ -97,4 +101,5 @@ public class RobotContainer {
   public Indexer getIndexer() {
     return indexer;
   }
+  public Servos getServos() {return servos;}
 }

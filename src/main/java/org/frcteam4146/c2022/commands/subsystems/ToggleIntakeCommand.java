@@ -6,25 +6,32 @@ import org.frcteam4146.c2022.subsystems.Intake;
 public class ToggleIntakeCommand extends CommandBase {
 
   private final Intake intake;
-  private final boolean state;
+  private final boolean extend;
+  private final boolean enable;
 
-  public ToggleIntakeCommand(Intake intake, boolean state) {
+  public ToggleIntakeCommand(Intake intake, boolean enable, boolean extend) {
     this.intake = intake;
-    this.state = state;
+    this.extend = extend;
+    this.enable = enable;
   }
 
   @Override
   public void initialize() {
-    intake.setIntake(state);
+
+    intake.setIntake(enable);
+    intake.extendIntake(extend);
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 
   @Override
   public void end(boolean interrupted) {
-    intake.setIntake(false);
+    if (interrupted) {
+      if (enable) intake.setIntake(false);
+      if (extend) intake.extendIntake(false);
+    }
   }
 }
