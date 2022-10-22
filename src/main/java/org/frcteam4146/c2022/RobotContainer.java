@@ -4,12 +4,13 @@ import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frcteam4146.c2022.commands.commandGroups.ShootNoLimelightCommand;
-import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.autos.DriveOutAuto;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
+import org.frcteam4146.c2022.commands.commandGroups.ShootNoLimelightCommand;
+import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
+import org.frcteam4146.c2022.commands.subsystems.ToggleClimbBrakes;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
 import org.frcteam4146.c2022.subsystems.*;
@@ -53,15 +54,13 @@ public class RobotContainer {
 
     CommandScheduler.getInstance()
         .setDefaultCommand(
-           climb,
-           new ClimbCommand(
-               climb,
-               secondaryController.getLeftYAxis(),
-               secondaryController.getRightYAxis(),
-               secondaryController.getLeftTriggerAxis(),
-               secondaryController.getRightTriggerAxis()
-           )
-        );
+            climb,
+            new ClimbCommand(
+                climb,
+                secondaryController.getLeftYAxis(),
+                secondaryController.getRightYAxis(),
+                secondaryController.getLeftTriggerAxis(),
+                secondaryController.getRightTriggerAxis()));
 
     configureButtonBindings();
   }
@@ -80,31 +79,45 @@ public class RobotContainer {
     primaryController
         .getLeftBumperButton()
         .whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
-    primaryController.getRightBumperButton().whenPressed(new ToggleLimelightTrackingCommand(limelight,true));
+    primaryController
+        .getRightBumperButton()
+        .whenPressed(new ToggleLimelightTrackingCommand(limelight, true));
     primaryController.getStartButton().whenPressed(() -> gyroscope.calibrate());
-    primaryController.getBackButton().whenPressed(new ToggleIntakeCommand(intake, false, true));
-
+    primaryController
+        .getBackButton()
+        .toggleWhenPressed(new ToggleIntakeCommand(intake, false, true));
+    secondaryController.getYButton().toggleWhenPressed(new ToggleClimbBrakes(climb, true));
   }
+
   public Command getAutonomousCommand() {
     return new DriveOutAuto(this);
   }
+
   public DrivetrainSubsystem getDrivetrain() {
     return drivetrainSubsystem;
   }
+
   public Gyroscope getGyroscope() {
     return gyroscope;
   }
+
   public Limelight getLimelight() {
     return limelight;
   }
+
   public Flywheel getFlywheel() {
     return flywheel;
   }
+
   public Intake getIntake() {
     return intake;
   }
+
   public Indexer getIndexer() {
     return indexer;
   }
-  public Servos getServos() {return servos;}
+
+  public Servos getServos() {
+    return servos;
+  }
 }

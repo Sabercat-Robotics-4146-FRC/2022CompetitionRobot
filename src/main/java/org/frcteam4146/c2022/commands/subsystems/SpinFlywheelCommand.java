@@ -15,6 +15,7 @@ public class SpinFlywheelCommand extends CommandBase {
 
     this.state = state;
   }
+
   public SpinFlywheelCommand(Flywheel flywheel, boolean state) {
     this.flywheel = flywheel;
     this.limelight = null;
@@ -29,10 +30,9 @@ public class SpinFlywheelCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if(limelight != null) {
+    if (limelight != null) {
       flywheel.determineSetpoint(0.5);
-    }
-    else {
+    } else {
       flywheel.determineSetpoint(limelight.getDistanceFromTarget());
     }
   }

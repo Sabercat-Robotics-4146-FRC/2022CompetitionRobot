@@ -16,6 +16,7 @@ public class Robot extends TimedRobot {
   private UpdateManager updateManager = new UpdateManager(robotContainer.getDrivetrain());
   public Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   public PowerDistribution pdh = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+
   public Robot() {
     instance = this;
   }
