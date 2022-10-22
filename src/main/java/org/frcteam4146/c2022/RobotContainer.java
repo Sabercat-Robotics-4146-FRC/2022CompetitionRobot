@@ -2,9 +2,11 @@ package org.frcteam4146.c2022;
 
 import static org.frcteam4146.c2022.Constants.DriveConstants;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frcteam4146.c2022.commands.commandGroups.ShootNoLimelightCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
+import org.frcteam4146.c2022.commands.autos.DriveOutAuto;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
@@ -80,9 +82,12 @@ public class RobotContainer {
         .whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
     primaryController.getRightBumperButton().whenPressed(new ToggleLimelightTrackingCommand(limelight,true));
     primaryController.getStartButton().whenPressed(() -> gyroscope.calibrate());
+    primaryController.getBackButton().whenPressed(new ToggleIntakeCommand(intake, false, true));
 
   }
-
+  public Command getAutonomousCommand() {
+    return new DriveOutAuto(this);
+  }
   public DrivetrainSubsystem getDrivetrain() {
     return drivetrainSubsystem;
   }
