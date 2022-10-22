@@ -32,7 +32,7 @@ public class Climb implements Subsystem {
 
     CANSparkMax[] motors = {anchorExtMotor, armExtMotor, armRotMotor};
     for (CANSparkMax motor : motors) {
-      motor.setSmartCurrentLimit(20);
+      motor.setSmartCurrentLimit(30);
       motor.setOpenLoopRampRate(0.5);
       motor.enableVoltageCompensation(12);
     }
@@ -54,7 +54,7 @@ public class Climb implements Subsystem {
   }
 
   public void setAnchorExtension(double speed) {
-    armRotMotor.set(speed);
+    anchorExtMotor.set(speed);
   }
 
   public void setArmExtension(double speed) {
@@ -62,7 +62,7 @@ public class Climb implements Subsystem {
   }
 
   public void setRotation(double speed) {
-    anchorExtMotor.set(speed);
+    armRotMotor.set(speed);
   }
 
   public double getAnchorExtension() {

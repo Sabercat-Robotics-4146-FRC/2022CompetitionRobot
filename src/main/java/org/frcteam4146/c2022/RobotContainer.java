@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frcteam4146.c2022.commands.autos.DriveOutAuto;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
-import org.frcteam4146.c2022.commands.commandGroups.ShootNoLimelightCommand;
 import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
@@ -69,7 +68,7 @@ public class RobotContainer {
     // TODO: Configure Button Bindings
     // primaryController.getAButton().whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
     primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true, false));
-    primaryController.getXButton().toggleWhenPressed(new ShootNoLimelightCommand(this));
+    // primaryController.getXButton().toggleWhenPressed(new ShootNoLimelightCommand(this));
     primaryController
         .getBButton()
         .toggleWhenPressed(new ShootBallCommand(limelight, flywheel, indexer));

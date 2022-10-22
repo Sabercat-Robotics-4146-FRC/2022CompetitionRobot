@@ -27,7 +27,7 @@ import org.frcteam4146.common.robot.UpdateManager;
 import org.frcteam4146.common.util.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
-  public boolean driveFlag = true;
+  public boolean driveFlag = false;
 
   /*
     This value is used to turn the robot back to its initialPosition
