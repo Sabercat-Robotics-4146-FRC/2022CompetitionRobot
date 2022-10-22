@@ -168,10 +168,10 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         };
 
     for (var talon : talons) {
-      talon.configPeakCurrentLimit(20); // max. current (amps)
+      talon.configPeakCurrentLimit(25); // max. current (amps)
       talon.configPeakCurrentDuration(
           5); // # milliseconds after peak reached before regulation starts
-      talon.configContinuousCurrentLimit(10); // continuous current (amps) after regulation
+      talon.configContinuousCurrentLimit(20); // continuous current (amps) after regulation
       talon.configOpenloopRamp(1); // # seconds to reach peak throttle
     }
 

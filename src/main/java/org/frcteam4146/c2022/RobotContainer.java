@@ -18,6 +18,7 @@ import org.frcteam4146.common.robot.input.XboxController;
 
 public class RobotContainer {
 
+  private Command m_autoCommand;
   private final Gyroscope gyroscope = new Pigeon(DriveConstants.PIGEON_PORT);
   private final XboxController primaryController =
       new XboxController(Constants.PRIMARY_CONTROLLER_PORT);
@@ -61,6 +62,14 @@ public class RobotContainer {
                 secondaryController.getLeftTriggerAxis(),
                 secondaryController.getRightTriggerAxis()));
 
+    m_autoCommand =
+        new DriveOutAuto(
+            drivetrainSubsystem,
+            gyroscope,
+            limelight,
+            flywheel,
+            indexer); // new ShootBallCommand(limelight, flywheel, indexer);
+
     configureButtonBindings();
   }
 
@@ -91,7 +100,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new DriveOutAuto(this);
+    return m_autoCommand;
   }
 
   public DrivetrainSubsystem getDrivetrain() {
