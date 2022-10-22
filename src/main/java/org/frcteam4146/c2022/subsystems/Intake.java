@@ -12,8 +12,11 @@ public class Intake implements Subsystem {
   public Solenoid solenoid;
   public CANSparkMax intake;
 
+  public boolean extended;
+
   public Intake() {
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.INTAKE_SOLENOID);
+
     intake = new CANSparkMax(IntakeConstants.INTAKE_MOTOR, MotorType.kBrushless);
 
     intake.setSmartCurrentLimit(15);
@@ -23,11 +26,14 @@ public class Intake implements Subsystem {
 
   public void extendIntake(boolean state) {
     solenoid.set(state);
+    extended = state;
   }
 
   public void setIntake(boolean state) {
-    if (state) intake.setVoltage(11);
-    else intake.setVoltage(0);
+    if (extended) {
+      if (state) intake.setVoltage(11);
+      else intake.setVoltage(0);
+    }
   }
 
   public boolean pickedUpBall() {

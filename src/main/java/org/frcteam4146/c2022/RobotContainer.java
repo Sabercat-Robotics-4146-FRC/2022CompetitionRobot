@@ -11,6 +11,7 @@ import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleClimbBrakes;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
+import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommandExtension;
 import org.frcteam4146.c2022.commands.subsystems.ToggleLimelightTrackingCommand;
 import org.frcteam4146.c2022.subsystems.*;
 import org.frcteam4146.common.drivers.Gyroscope;
@@ -67,7 +68,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Configure Button Bindings
     // primaryController.getAButton().whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
-    primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true, false));
+    primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true));
     // primaryController.getXButton().toggleWhenPressed(new ShootNoLimelightCommand(this));
     primaryController
         .getBButton()
@@ -84,7 +85,7 @@ public class RobotContainer {
     primaryController.getStartButton().whenPressed(() -> gyroscope.calibrate());
     primaryController
         .getBackButton()
-        .toggleWhenPressed(new ToggleIntakeCommand(intake, false, true));
+        .toggleWhenPressed(new ToggleIntakeCommandExtension(intake, true));
     secondaryController.getYButton().toggleWhenPressed(new ToggleClimbBrakes(climb, true));
   }
 
