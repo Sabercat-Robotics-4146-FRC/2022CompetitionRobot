@@ -5,28 +5,32 @@ import org.frcteam4146.c2022.subsystems.Climb;
 import org.frcteam4146.common.robot.input.Axis;
 
 public class ClimbCommand extends CommandBase {
-    public final Climb climb;
+  public final Climb climb;
 
-    public final Axis rotAxis;
-    public final Axis armAxis;
+  public final Axis rotAxis;
+  public final Axis armAxis;
 
-    public final Axis[] anchorAxis;
+  public final Axis[] anchorAxis;
 
+  public ClimbCommand(Climb climb, Axis armAxis, Axis rotAxis, Axis leftUp, Axis rightDown) {
+    this.climb = climb;
+    this.rotAxis = rotAxis;
+    this.armAxis = armAxis;
+    anchorAxis = new Axis[] {leftUp, rightDown};
 
-    public ClimbCommand(Climb climb, Axis armAxis, Axis rotAxis, Axis leftUp, Axis rightDown) {
-        this.climb = climb;
-        this.rotAxis = rotAxis;
-        this.armAxis = armAxis;
-        anchorAxis = new Axis[]{leftUp, rightDown};
+    addRequirements(climb);
+  }
 
-        addRequirements(climb);
+  @Override
+  public void execute() {
+    climb.setArmExtension(armAxis.get());
+    if (Math.abs(rotAxis.get()) <= 0.01) {
+      climb.setBreaks(true);
+    } else {
+      climb.setBreaks(false);
     }
-    @Override
-    public void execute() {
-        climb.setArmExtension(armAxis.get());
-        climb.setRotation(rotAxis.get());
-        climb.setAnchorExtension(anchorAxis[0].get() - anchorAxis[1].get());
-    }
+    climb.setRotation(rotAxis.get());
 
-
+    climb.setAnchorExtension(anchorAxis[0].get() - anchorAxis[1].get());
+  }
 }

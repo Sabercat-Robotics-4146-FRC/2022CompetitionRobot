@@ -3,8 +3,8 @@ package org.frcteam4146.c2022;
 import static org.frcteam4146.c2022.Constants.DriveConstants;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.commandGroups.ShootBallCommand;
+import org.frcteam4146.c2022.commands.drive.AimRobotCommand;
 import org.frcteam4146.c2022.commands.drive.DriveCommand;
 import org.frcteam4146.c2022.commands.subsystems.ClimbCommand;
 import org.frcteam4146.c2022.commands.subsystems.ToggleIntakeCommand;
@@ -49,15 +49,13 @@ public class RobotContainer {
 
     CommandScheduler.getInstance()
         .setDefaultCommand(
-           climb,
-           new ClimbCommand(
-               climb,
-               secondaryController.getLeftYAxis(),
-               secondaryController.getRightYAxis(),
-               secondaryController.getLeftTriggerAxis(),
-               secondaryController.getRightTriggerAxis()
-           )
-        );
+            climb,
+            new ClimbCommand(
+                climb,
+                secondaryController.getLeftYAxis(),
+                secondaryController.getRightYAxis(),
+                secondaryController.getLeftTriggerAxis(),
+                secondaryController.getRightTriggerAxis()));
 
     configureButtonBindings();
   }
@@ -66,7 +64,8 @@ public class RobotContainer {
     // TODO: Configure Button Bindings
     // primaryController.getAButton().whenPressed(() -> drivetrainSubsystem.toggleFieldOriented());
     primaryController.getAButton().toggleWhenPressed(new ToggleIntakeCommand(intake, true));
-    //primaryController.getXButton().toggleWhenPressed(new ToggleLimelightTrackingCommand(limelight));
+    // primaryController.getXButton().toggleWhenPressed(new
+    // ToggleLimelightTrackingCommand(limelight));
     primaryController
         .getBButton()
         .toggleWhenPressed(new ShootBallCommand(limelight, flywheel, indexer));
@@ -82,18 +81,23 @@ public class RobotContainer {
   public DrivetrainSubsystem getDrivetrain() {
     return drivetrainSubsystem;
   }
+
   public Gyroscope getGyroscope() {
     return gyroscope;
   }
+
   public Limelight getLimelight() {
     return limelight;
   }
+
   public Flywheel getFlywheel() {
     return flywheel;
   }
+
   public Intake getIntake() {
     return intake;
   }
+
   public Indexer getIndexer() {
     return indexer;
   }
