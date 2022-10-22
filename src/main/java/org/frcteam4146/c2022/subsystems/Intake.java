@@ -16,7 +16,6 @@ public class Intake implements Subsystem {
 
   public Intake() {
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.INTAKE_SOLENOID);
-
     intake = new CANSparkMax(IntakeConstants.INTAKE_MOTOR, MotorType.kBrushless);
 
     intake.setSmartCurrentLimit(15);

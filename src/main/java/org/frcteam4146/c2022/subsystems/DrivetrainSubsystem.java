@@ -27,7 +27,7 @@ import org.frcteam4146.common.robot.UpdateManager;
 import org.frcteam4146.common.util.*;
 
 public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
-  public boolean driveFlag = false;
+  public boolean driveFlag = true;
 
   /*
     This value is used to turn the robot back to its initialPosition
@@ -107,7 +107,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
 
   public DrivetrainSubsystem(Gyroscope gyroscope) {
     this.gyroscope = gyroscope;
-    SmartDashboard.putBoolean("Drive Flag", driveFlag);
+    // SmartDashboard.putBoolean("Drive Flag", driveFlag);
     gyroscope.setInverted(false);
     driveSignal = new HolonomicDriveSignal(new Vector2(0, 0), 0.0, true);
 
@@ -284,15 +284,15 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void update(double time, double dt) {
     updateOdometry(time, dt);
 
-    if (driveFlag) {
-      HolonomicDriveSignal driveSignal;
-      Optional<HolonomicDriveSignal> trajectorySignal =
-          follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
-      driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
-      updateModules(driveSignal, dt);
-    } else {
-      updateModules(new HolonomicDriveSignal(new Vector2(0, 0), 0, false), dt);
-    }
+    HolonomicDriveSignal driveSignal;
+    Optional<HolonomicDriveSignal> trajectorySignal =
+        follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
+    driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
+    updateModules(driveSignal, dt);
+
+    // else {
+    //  updateModules(new HolonomicDriveSignal(new Vector2(0, 0), 0, false), dt);
+    // }
   }
 
   @Override
@@ -301,7 +301,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     // rotation degrees to SmartDashboard
 
     SmartDashboard.putBoolean("Field Oriented", fieldOriented);
-    SmartDashboard.putBoolean("Drive Flag", driveFlag);
+    // SmartDashboard.putBoolean("Drive Flag", driveFlag);
 
     RigidTransform2 pose = getPose();
     odometryXEntry.setDouble(pose.translation.x);
@@ -347,9 +347,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     fieldOriented = !fieldOriented;
   }
 
-  public void toggleDriveFlag() {
-    driveFlag = !driveFlag;
-  }
+  // public void toggleDriveFlag() {
+  //  driveFlag = !driveFlag;
+  // }
 
   public Vector2 getTranslation() {
     return driveSignal.getTranslation();
