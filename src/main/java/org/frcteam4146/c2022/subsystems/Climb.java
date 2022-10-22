@@ -32,7 +32,7 @@ public class Climb implements Subsystem {
 
     CANSparkMax[] motors = {anchorExtMotor, armExtMotor, armRotMotor};
     for (CANSparkMax motor : motors) {
-      motor.setSmartCurrentLimit(30);
+      motor.setSmartCurrentLimit(40);
       motor.setOpenLoopRampRate(0.5);
       motor.enableVoltageCompensation(12);
     }

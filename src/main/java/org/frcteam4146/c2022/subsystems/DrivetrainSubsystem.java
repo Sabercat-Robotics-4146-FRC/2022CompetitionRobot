@@ -168,7 +168,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         };
 
     for (var talon : talons) {
-      talon.configPeakCurrentLimit(15); // max. current (amps)
+      talon.configPeakCurrentLimit(20); // max. current (amps)
       talon.configPeakCurrentDuration(
           5); // # milliseconds after peak reached before regulation starts
       talon.configContinuousCurrentLimit(10); // continuous current (amps) after regulation

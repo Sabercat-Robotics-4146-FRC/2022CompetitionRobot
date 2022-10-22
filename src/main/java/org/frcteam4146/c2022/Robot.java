@@ -12,7 +12,7 @@ import org.frcteam4146.common.robot.UpdateManager;
 public class Robot extends TimedRobot {
   private static Robot instance = null;
   private RobotContainer robotContainer = new RobotContainer();
-  private Command autonomousCommand;
+  private Command autonomousCommand; // = robotContainer.getAutonomousCommand();
   private UpdateManager updateManager = new UpdateManager(robotContainer.getDrivetrain());
   public Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
   public PowerDistribution pdh = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
