@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     robotContainer.getDrivetrainSubsystem().resetPose(RigidTransform2.ZERO);
+    autonomousCommand = robotContainer.getAutoCommand();
 
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

@@ -25,9 +25,7 @@ public class Constants {
   public static final double DRIVETRAIN_BACK_RIGHT_STEER_OFFSET =
       -Math.toRadians(239.14489746093753);
 
-
   public static final int PRIMARY_CONTROLLER_PORT = 0;
 
   public static final int PIGEON_PORT = 16;
-
 }

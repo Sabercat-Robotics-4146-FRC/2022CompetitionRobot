@@ -221,6 +221,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     driveSignal =
         new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented);
   }
+
   public void drive(Vector2 translationalVelocity, double rotationalVelocity) {
     drive(translationalVelocity, rotationalVelocity, fieldOriented);
   }
@@ -283,14 +284,13 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void update(double time, double dt) {
     updateOdometry(time, dt);
 
-    if(driveFlag) {
+    if (driveFlag) {
       HolonomicDriveSignal driveSignal;
       Optional<HolonomicDriveSignal> trajectorySignal =
-              follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
+          follower.update(getPose(), getVelocity(), getAngularVelocity(), time, dt);
       driveSignal = trajectorySignal.orElseGet(() -> this.driveSignal);
       updateModules(driveSignal, dt);
-    }
-    else {
+    } else {
       updateModules(new HolonomicDriveSignal(new Vector2(0, 0), 0, false), dt);
     }
   }
@@ -307,7 +307,6 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     odometryXEntry.setDouble(pose.translation.x);
     odometryYEntry.setDouble(pose.translation.y);
     odometryAngleEntry.setDouble(getPose().rotation.toDegrees());
-
   }
 
   public double getAverageAbsoluteValueVelocity() {
@@ -347,6 +346,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   public void toggleFieldOriented() {
     fieldOriented = !fieldOriented;
   }
+
   public void toggleDriveFlag() {
     driveFlag = !driveFlag;
   }
