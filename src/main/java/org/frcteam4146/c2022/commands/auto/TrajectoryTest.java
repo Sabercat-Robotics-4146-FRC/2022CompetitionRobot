@@ -19,6 +19,6 @@ public class TrajectoryTest extends SequentialCommandGroup {
                     .lineTo(new Vector2(0.0, -5.0))
                     .build(),
                 DrivetrainSubsystem.TRAJECTORY_CONSTRAINTS,
-                0.0)));
+                0.1)));
   }
 }
