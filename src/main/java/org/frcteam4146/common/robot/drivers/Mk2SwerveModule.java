@@ -6,7 +6,7 @@ package org.frcteam4146.common.robot.drivers;
 // import edu.wpi.first.wpilibj.AnalogInput;
 // import edu.wpi.first.wpilibj.Notifier;
 // import edu.wpi.first.wpilibj.RobotController;
-// import edu.wpi.first.wpilibj.Spark;
+// import edu.wpi.first.wpilibj.motorcontrol.Spark;
 // import org.frcteam4146.common.control.PidConstants;
 // import org.frcteam4146.common.control.PidController;
 // import org.frcteam4146.common.drivers.SwerveModule;

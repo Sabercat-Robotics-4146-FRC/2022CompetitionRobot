@@ -1,10 +1,10 @@
 package org.frcteam4146.common.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frcteam4146.common.robot.subsystems.HolonomicDrivetrain;
 
 @Deprecated
-public class ZeroFieldOrientedCommand extends Command {
+public class ZeroFieldOrientedCommand extends CommandBase {
   private final HolonomicDrivetrain drivetrain;
 
   public ZeroFieldOrientedCommand(HolonomicDrivetrain drivetrain) {
@@ -12,12 +12,12 @@ public class ZeroFieldOrientedCommand extends Command {
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     drivetrain.getGyroscope().setAdjustmentAngle(drivetrain.getGyroscope().getUnadjustedAngle());
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return true;
   }
 }

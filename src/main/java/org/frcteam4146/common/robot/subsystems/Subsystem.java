@@ -1,7 +1,7 @@
 package org.frcteam4146.common.robot.subsystems;
 
 @Deprecated
-public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem {
+public abstract class Subsystem extends edu.wpi.first.wpilibj2.command.SubsystemBase {
 
   public void writeToLog() {}
 

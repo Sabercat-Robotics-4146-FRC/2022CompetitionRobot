@@ -1,14 +1,14 @@
 package org.frcteam4146.common.robot.commands;
 
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frcteam4146.common.math.MathUtils;
 import org.frcteam4146.common.robot.input.Axis;
 import org.frcteam4146.common.robot.subsystems.ShiftingTankDrivetrain;
 import org.frcteam4146.common.robot.subsystems.TankDrivetrain;
 
 @Deprecated
-public final class CheesyDriveCommand extends Command {
+public final class CheesyDriveCommand extends CommandBase {
   private static final double HIGH_WHEEL_NON_LINEARITY = 0.65;
   private static final double LOW_WHEEL_NON_LINEARITY = 0.5;
 
@@ -30,7 +30,7 @@ public final class CheesyDriveCommand extends Command {
 
   private final Axis forwardAxis;
   private final Axis turnAxis;
-  private final Button quickTurnButton;
+  private final Trigger quickTurnButton;
 
   private double oldTurn;
   private double quickStopAccumulator;
@@ -41,30 +41,30 @@ public final class CheesyDriveCommand extends Command {
   }
 
   public CheesyDriveCommand(
-      TankDrivetrain drivetrain, Axis forwardAxis, Axis turnAxis, Button quickTurnButton) {
+      TankDrivetrain drivetrain, Axis forwardAxis, Axis turnAxis, Trigger quickTurnButton) {
     this.drivetrain = drivetrain;
     this.forwardAxis = forwardAxis;
     this.turnAxis = turnAxis;
     this.quickTurnButton = quickTurnButton;
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     oldTurn = 0;
     quickStopAccumulator = 0;
     negInertiaAccumulator = 0;
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     double throttle = forwardAxis.get(true);
     double wheel = turnAxis.get(true);
 
     boolean quickTurn = false;
     if (quickTurnButton != null) {
-      quickTurn = quickTurnButton.get();
+      quickTurn = quickTurnButton.getAsBoolean();
     }
 
     double negInertia = wheel - oldTurn;
@@ -158,12 +158,12 @@ public final class CheesyDriveCommand extends Command {
   }
 
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     drivetrain.stop();
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 }

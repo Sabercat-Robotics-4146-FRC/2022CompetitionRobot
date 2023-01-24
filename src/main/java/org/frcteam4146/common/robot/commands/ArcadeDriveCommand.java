@@ -1,11 +1,11 @@
 package org.frcteam4146.common.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frcteam4146.common.robot.input.Axis;
 import org.frcteam4146.common.robot.subsystems.TankDrivetrain;
 
 @Deprecated
-public final class ArcadeDriveCommand extends Command {
+public final class ArcadeDriveCommand extends CommandBase {
   private final TankDrivetrain drivetrain;
 
   private final Axis forwardAxis;
@@ -16,21 +16,21 @@ public final class ArcadeDriveCommand extends Command {
     this.forwardAxis = forwardAxis;
     this.turnAxis = turnAxis;
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     drivetrain.arcadeDrive(forwardAxis.get(true), turnAxis.get(true));
   }
 
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     drivetrain.stop();
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 }

@@ -22,6 +22,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    System.out.println("test");
     updateManager.startLoop(5.0e-3);
   }
 

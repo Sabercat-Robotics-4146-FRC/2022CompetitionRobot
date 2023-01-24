@@ -5,6 +5,8 @@ import static org.frcteam4146.c2022.Constants.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -54,7 +56,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
           // meters
           // per
           // rotation
-          0.70067, 2.2741, 0.16779);
+          0.70067, 1.2741, 0.16779);
 
   public static final TrajectoryConstraint[] TRAJECTORY_CONSTRAINTS = {
     new FeedforwardConstraint(
@@ -62,7 +64,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
         FEEDFORWARD_CONSTANTS.getVelocityConstant(),
         FEEDFORWARD_CONSTANTS.getAccelerationConstant(),
         false),
-    new MaxAccelerationConstraint(12.5 * 12.0), // originally 12.5 * 12.0
+    new MaxAccelerationConstraint(5), // originally 12.5 * 12.0
     new CentripetalAccelerationConstraint(15 * 12.0)
   };
 
@@ -102,9 +104,9 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
   private HolonomicDriveSignal driveSignal;
 
   // Logging
-  private final NetworkTableEntry odometryXEntry;
-  private final NetworkTableEntry odometryYEntry;
-  private final NetworkTableEntry odometryAngleEntry;
+  private final GenericEntry odometryXEntry;
+  private final GenericEntry odometryYEntry;
+  private final GenericEntry odometryAngleEntry;
 
   public DrivetrainSubsystem() {
     SmartDashboard.putBoolean("Drive Flag", driveFlag);
@@ -271,7 +273,7 @@ public class DrivetrainSubsystem implements Subsystem, UpdateManager.Updatable {
     }
 
     Vector2[] moduleOutputs = swerveKinematics.toModuleVelocities(chassisVelocity);
-    SwerveKinematics.normalizeModuleVelocities(moduleOutputs, 1);
+    SwerveKinematics.normalizeModuleVelocities(moduleOutputs, 0.5); // maximumVelocity 1 -> 0.5
     for (int i = 0; i < moduleOutputs.length; i++) {
       var module = modules[i];
       // As maximum velocity is normalized to 1, the maximum voltage passed to a

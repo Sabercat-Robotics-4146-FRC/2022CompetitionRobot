@@ -13,11 +13,6 @@ public final class NullButton extends Button {
     value = initialValue;
   }
 
-  @Override
-  public boolean get() {
-    return value;
-  }
-
   public void set(boolean value) {
     this.value = value;
   }

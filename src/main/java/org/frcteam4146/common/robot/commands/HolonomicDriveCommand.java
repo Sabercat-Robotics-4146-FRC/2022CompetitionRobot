@@ -1,11 +1,10 @@
 package org.frcteam4146.common.robot.commands;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import org.frcteam4146.common.Logger;
 import org.frcteam4146.common.control.PidConstants;
 import org.frcteam4146.common.math.MathUtils;
@@ -14,7 +13,7 @@ import org.frcteam4146.common.robot.input.Axis;
 import org.frcteam4146.common.robot.subsystems.HolonomicDrivetrain;
 
 @Deprecated
-public final class HolonomicDriveCommand extends Command {
+public final class HolonomicDriveCommand extends CommandBase {
   private static final double ROTATION_END_TIMEOUT = 0.5;
   private static final Logger LOGGER = new Logger(HolonomicDriveCommand.class);
 
@@ -22,7 +21,7 @@ public final class HolonomicDriveCommand extends Command {
   private final Axis forwardAxis;
   private final Axis strafeAxis;
   private final Axis rotationAxis;
-  private final Button fieldOrientedOverrideButton;
+  private final Trigger fieldOrientedOverrideButton;
 
   private final Timer rotationEndTimer = new Timer();
   private boolean waitingForRotationTimer = false;
@@ -35,7 +34,7 @@ public final class HolonomicDriveCommand extends Command {
       Axis forwardAxis,
       Axis strafeAxis,
       Axis rotationAxis,
-      Button fieldOrientedOverrideButton) {
+      Trigger fieldOrientedOverrideButton) {
     this(
         drivetrain,
         forwardAxis,
@@ -50,7 +49,7 @@ public final class HolonomicDriveCommand extends Command {
       Axis forwardAxis,
       Axis strafeAxis,
       Axis rotationAxis,
-      Button fieldOrientedOverrideButton,
+      Trigger fieldOrientedOverrideButton,
       PidConstants constants) {
     this.drivetrain = drivetrain;
     this.forwardAxis = forwardAxis;
@@ -59,47 +58,50 @@ public final class HolonomicDriveCommand extends Command {
     this.fieldOrientedOverrideButton = fieldOrientedOverrideButton;
 
     angleController =
-        new PIDController(
-            constants.p,
-            constants.i,
-            constants.d,
-            new PIDSource() {
-              @Override
-              public void setPIDSourceType(PIDSourceType pidSource) {}
+        new PIDController (
+          constants.p,
+          constants.i,
+          constants.d
+        );
+        // new PIDController(
+        //     constants.p,
+        //     constants.i,
+        //     constants.d,
+        //     new PIDSource() {
+        //       @Override
+        //       public void setPIDSourceType(PIDSourceType pidSource) {}
 
-              @Override
-              public double pidGet() {
-                return drivetrain.getGyroscope().getAngle().toDegrees();
-              }
+        //       @Override
+        //       public double pidGet() {
+        //         return drivetrain.getGyroscope().getAngle().toDegrees();
+        //       }
 
-              @Override
-              public PIDSourceType getPIDSourceType() {
-                return PIDSourceType.kDisplacement;
-              }
-            },
-            output -> {
-              angleControllerOutput = output;
-            });
-    angleController.setInputRange(0, 360);
-    angleController.setContinuous(true);
+        //       @Override
+        //       public PIDSourceType getPIDSourceType() {
+        //         return PIDSourceType.kDisplacement;
+        //       }
+        //     },
+        //     output -> {
+        //       angleControllerOutput = output;
+        //     });
+    angleController.enableContinuousInput(0, 360);
 
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     waitingForRotationTimer = false;
 
     angleController.setSetpoint(drivetrain.getGyroscope().getAngle().toDegrees());
-    angleController.enable();
   }
 
   @Override
-  protected void execute() {
+  public void execute() {
     double forward = forwardAxis.get(true);
     double strafe = strafeAxis.get(true);
     double rotation = rotationAxis.get(true);
-    boolean fieldOriented = !fieldOrientedOverrideButton.get();
+    boolean fieldOriented = !fieldOrientedOverrideButton.getAsBoolean();
 
     if (MathUtils.epsilonEquals(rotation, 0)) {
       if (waitingForRotationTimer) {
@@ -128,13 +130,12 @@ public final class HolonomicDriveCommand extends Command {
   }
 
   @Override
-  protected void end() {
-    angleController.disable();
+  public void end(boolean interrupted) {
     drivetrain.stop();
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 }
